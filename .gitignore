@@ -1,1 +1,3 @@
 *.suo
+/LevelEditor/LevelEditor/bin/Debug
+/LevelEditor/LevelEditor/obj/Debug
