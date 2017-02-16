@@ -21,9 +21,11 @@ namespace LevelEditor
 
     public class Cell
     {
-        Point mPoint;
-        short mID;
-        Color mColor;
+
+        public Point mPoint;
+        public short mID;
+        public bool isActive = false;
+        public Color mColor;
 
         public Cell(int _x, int _y)
         {

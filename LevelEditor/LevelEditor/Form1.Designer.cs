@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -36,23 +36,9 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.graphicsPanel1.SuspendLayout();
+            this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // graphicsPanel1
-            // 
-            this.graphicsPanel1.Controls.Add(this.statusStrip);
-            this.graphicsPanel1.Controls.Add(this.toolStrip);
-            this.graphicsPanel1.Controls.Add(this.menuStrip);
-            this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
-            this.graphicsPanel1.Name = "graphicsPanel1";
-            this.graphicsPanel1.Size = new System.Drawing.Size(668, 544);
-            this.graphicsPanel1.TabIndex = 0;
-            this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.DrawCall);
             // 
             // menuStrip
             // 
@@ -104,31 +90,35 @@
             this.toolStrip.Location = new System.Drawing.Point(0, 24);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(668, 25);
-            this.toolStrip.TabIndex = 1;
-            this.toolStrip.Text = "toolStrip1";
+            this.toolStrip.TabIndex = 3;
+            this.toolStrip.Text = "toolStrip";
             // 
-            // statusStrip
+            // graphicsPanel1
             // 
-            this.statusStrip.Location = new System.Drawing.Point(0, 522);
-            this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(668, 22);
-            this.statusStrip.TabIndex = 2;
-            this.statusStrip.Text = "statusStrip1";
+            this.graphicsPanel1.AutoSize = true;
+            this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.graphicsPanel1.Location = new System.Drawing.Point(0, 24);
+            this.graphicsPanel1.Name = "graphicsPanel1";
+            this.graphicsPanel1.Size = new System.Drawing.Size(668, 520);
+            this.graphicsPanel1.TabIndex = 0;
+            this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.DrawCall);
+            this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ClickEvent);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(668, 544);
+            this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.graphicsPanel1);
+            this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
             this.Name = "Form1";
             this.Text = "Level Editor";
-            this.graphicsPanel1.ResumeLayout(false);
-            this.graphicsPanel1.PerformLayout();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -141,9 +131,8 @@
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStrip toolStrip;
-        private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ColorDialog colorDialog;
+        private System.Windows.Forms.ToolStrip toolStrip;
     }
 }
 
