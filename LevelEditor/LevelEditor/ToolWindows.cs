@@ -12,9 +12,17 @@ namespace LevelEditor
 {
     public partial class ToolWindows : Form
     {
+
+        public event EventHandler<BoolArgs> killMe;
+
         public ToolWindows()
         {
             InitializeComponent();
+        }
+
+        private void OnClosing(object sender, FormClosingEventArgs e)
+        {
+            killMe(this, new BoolArgs(false));
         }
     }
 }

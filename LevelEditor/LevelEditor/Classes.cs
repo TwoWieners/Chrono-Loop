@@ -48,4 +48,26 @@ namespace LevelEditor
         }
     }
 
+    public class GameObject
+    {
+        Cell[,] objGrid;
+        //Base Object stuff
+        String name;
+        GameObject parent;
+        ushort uID, ID;
+
+
+    }
+
+    public class BoolArgs : EventArgs
+    {
+        public bool boolChange = true;
+
+        public BoolArgs(bool change)
+        {
+            boolChange = change;
+        }
+    }
+
+
 }

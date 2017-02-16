@@ -24,6 +24,9 @@ namespace LevelEditor
         Cell[,] level;
         Cell[,] scratch;
 
+        //Windows
+        bool toolWindow = false, previewWindow = false;
+
         #endregion
 
         public Form1()
@@ -51,7 +54,11 @@ namespace LevelEditor
             Preview pWindow = new Preview();
 
             tWindow.Show();
+            tWindow.killMe += KillTools;
+            toolWindow = true;
             pWindow.Show();
+            pWindow.killMe += KillPreview;
+            previewWindow = true;
 
         }
 
@@ -62,6 +69,53 @@ namespace LevelEditor
         #endregion
 
         #region MenuStrip
+
+        private void ExitOption(object sender, EventArgs e)
+        {
+
+        }
+
+        private void NewOption(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OpenOption(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SaveOption(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OptionsOpen(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OpenToolWindow(object sender, EventArgs e)
+        {
+            if (!toolWindow)
+            {
+                ToolWindows tWindow = new ToolWindows();
+                toolWindow = true;
+                tWindow.Show();
+                tWindow.killMe += KillTools;
+            }
+        }
+
+        private void OpenPreviewWindow(object sender, EventArgs e)
+        {
+            if (!previewWindow)
+            {
+                Preview pWindow = new Preview();
+                previewWindow = true;
+                pWindow.Show();
+                pWindow.killMe += KillPreview;
+            }
+        }
 
         #endregion
 
@@ -109,6 +163,16 @@ namespace LevelEditor
         #endregion
 
         #region Other Events
+
+        void KillTools(object sender, BoolArgs e)
+        {
+            toolWindow = e.boolChange;
+        }
+
+        void KillPreview(object sender, BoolArgs e)
+        {
+            previewWindow = e.boolChange;
+        }
 
         #endregion
 

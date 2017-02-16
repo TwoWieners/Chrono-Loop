@@ -12,9 +12,16 @@ namespace LevelEditor
 {
     public partial class Preview : Form
     {
+
+        public event EventHandler<BoolArgs> killMe;
         public Preview()
         {
             InitializeComponent();
+        }
+
+        private void OnClosing(object sender, FormClosingEventArgs e)
+        {
+            killMe(this, new BoolArgs(false));
         }
     }
 }
