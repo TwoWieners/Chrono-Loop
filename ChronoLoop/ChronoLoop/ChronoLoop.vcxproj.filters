@@ -112,6 +112,9 @@
     <Filter Include="DXTK">
       <UniqueIdentifier>{16572d88-a51f-45a6-a564-025b7a4af6ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\Math">
+      <UniqueIdentifier>{33a90bf5-e8c9-4456-b11a-8aa44176c1a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -284,6 +287,21 @@
     </ClInclude>
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h">
       <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\matrix4.h">
+      <Filter>Common\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec2f.h">
+      <Filter>Common\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec3f.h">
+      <Filter>Common\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec4f.h">
+      <Filter>Common\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec4i.h">
+      <Filter>Common\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -470,6 +488,21 @@
     </ClCompile>
     <ClCompile Include="Core\Pool.cpp">
       <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\matrix4.cpp">
+      <Filter>Common\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec2f.cpp">
+      <Filter>Common\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec3f.cpp">
+      <Filter>Common\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec4f.cpp">
+      <Filter>Common\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec4i.cpp">
+      <Filter>Common\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

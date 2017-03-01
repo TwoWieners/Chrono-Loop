@@ -50,8 +50,8 @@ namespace RenderEngine {
 		}
 #endif
 
-		mIndexOffset = IndexBufferManager::Instance().AddToBuffer(_mesh.GetName(), _mesh.GetIndicies(), _mesh.IndicieSize());
-		mVertexOffset = VertexBufferManager::Instance().GetInternalBuffer<VertexPosNormTex>()->AddVerts(_mesh.GetName(), _mesh.GetVerts(), _mesh.VertSize());
+		mIndexOffset = (unsigned int)IndexBufferManager::Instance().AddToBuffer(_mesh.GetName(), _mesh.GetIndicies(), _mesh.IndicieSize());
+		mVertexOffset = (unsigned int)VertexBufferManager::Instance().GetInternalBuffer<VertexPosNormTex>()->AddVerts(_mesh.GetName(), _mesh.GetVerts(), _mesh.VertSize());
 
 
 		ID3D11Buffer *tBuffer;
