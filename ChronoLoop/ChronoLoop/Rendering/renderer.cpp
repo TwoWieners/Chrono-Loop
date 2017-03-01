@@ -16,6 +16,9 @@
 #define ENABLE_TEXT 0
 
 
+#define NEAR_PLANE (0.1f)
+#define FAR_PLANE (1000.0f)
+
 using namespace std;
 using namespace D2D1;
 
@@ -54,39 +57,24 @@ namespace RenderEngine {
 	}
 
 	matrix4 Renderer::GetEye(vr::EVREye e) {
-		vr::HmdMatrix34_t matEyeRight = mVrSystem->GetEyeToHeadTransform(e);
-		matrix4 matrixObj(
-			matEyeRight.m[0][0], matEyeRight.m[1][0], matEyeRight.m[2][0], 0.0,
-			matEyeRight.m[0][1], matEyeRight.m[1][1], matEyeRight.m[2][1], 0.0,
-			matEyeRight.m[0][2], matEyeRight.m[1][2], matEyeRight.m[2][2], 0.0,
-			matEyeRight.m[0][3], matEyeRight.m[1][3], matEyeRight.m[2][3], 1.0f
-		);
-
-		return matrixObj.Inverse();
+		matrix4 eye = mVrSystem->GetEyeToHeadTransform(e);
+		return eye.Invert();
 	}
 
 	matrix4 Renderer::GetProjection(vr::EVREye e) {
-
-		vr::HmdMatrix44_t mat = mVrSystem->GetProjectionMatrix(e, 0.1f, 1000);
-
-		return matrix4(
-			mat.m[0][0], mat.m[1][0], mat.m[2][0], mat.m[3][0],
-			mat.m[0][1], mat.m[1][1], mat.m[2][1], mat.m[3][1],
-			mat.m[0][2], mat.m[1][2], mat.m[2][2], mat.m[3][2],
-			mat.m[0][3], mat.m[1][3], mat.m[2][3], mat.m[3][3]
-		);
+		return mVrSystem->GetProjectionMatrix(e, NEAR_PLANE, FAR_PLANE);
 	}
 
 	void Renderer::GetMVP(vr::EVREye e, ViewProjectionBuffer &data) {
-		matrix4 hmd = Math::FromMatrix(VRInputManager::Instance().iGetTrackedPositions()[0].mDeviceToAbsoluteTracking);
+		matrix4 hmd = VRInputManager::Instance().iGetTrackedPositions()[0].mDeviceToAbsoluteTracking;
 
-		matrix4 hmdPos = (hmd * VRInputManager::Instance().iGetPlayerPosition()).Inverse();
+		matrix4 hmdPos = (hmd * VRInputManager::Instance().iGetPlayerPosition()).Invert();
 		if (e == vr::EVREye::Eye_Left) {
-			data.view = Math::MatrixTranspose((hmdPos * mEyePosLeft));
-			data.projection = Math::MatrixTranspose(mEyeProjLeft);
+			data.view = (hmdPos * mEyePosLeft).Transpose();
+			data.projection = mEyeProjLeft.Transpose();
 		} else {
-			data.view = Math::MatrixTranspose((hmdPos * mEyePosRight));
-			data.projection = Math::MatrixTranspose(mEyeProjRight);
+			data.view = (hmdPos * mEyePosRight).Transpose();
+			data.projection = mEyeProjRight.Transpose();
 		}
 	}
 
@@ -399,35 +387,35 @@ namespace RenderEngine {
 
 		//w
 		if (GetAsyncKeyState('W')) {
-			mDebugCameraPos = Math::MatrixTranslation(0, 0, -_moveSpd * _delta) * mDebugCameraPos;
+			mDebugCameraPos = matrix4::CreateTranslation(0, 0, -_moveSpd * _delta) * mDebugCameraPos;
 		}
 		//s
 		if (GetAsyncKeyState('S')) {
-			mDebugCameraPos = Math::MatrixTranslation(0, 0, _moveSpd * _delta) * mDebugCameraPos;
+			mDebugCameraPos = matrix4::CreateTranslation(0, 0, _moveSpd * _delta) * mDebugCameraPos;
 		}
 		//a
 		if (GetAsyncKeyState('A')) {
-			mDebugCameraPos = Math::MatrixTranslation(-_moveSpd * _delta, 0, 0) * mDebugCameraPos;
+			mDebugCameraPos = matrix4::CreateTranslation(-_moveSpd * _delta, 0, 0) * mDebugCameraPos;
 		}
 		//d
 		if (GetAsyncKeyState('D')) {
-			mDebugCameraPos = Math::MatrixTranslation(_moveSpd * _delta, 0, 0) * mDebugCameraPos;
+			mDebugCameraPos = matrix4::CreateTranslation(_moveSpd * _delta, 0, 0) * mDebugCameraPos;
 		}
 		// Q
 		if (GetAsyncKeyState('Q')) {
-			mDebugCameraPos = Math::MatrixRotateZ(_rotSpd * _delta) * mDebugCameraPos;
+			mDebugCameraPos = matrix4::CreateZRotation(_rotSpd * _delta) * mDebugCameraPos;
 		}
 		// E
 		if (GetAsyncKeyState('E')) {
-			mDebugCameraPos = Math::MatrixRotateZ(-_rotSpd * _delta) * mDebugCameraPos;
+			mDebugCameraPos = matrix4::CreateZRotation(-_rotSpd * _delta) * mDebugCameraPos;
 		}
 		//x
 		if (GetAsyncKeyState(VK_CONTROL)) {
-			mDebugCameraPos = Math::MatrixTranslation(0, -_moveSpd * _delta, 0) * mDebugCameraPos;
+			mDebugCameraPos = matrix4::CreateTranslation(0, -_moveSpd * _delta, 0) * mDebugCameraPos;
 		}
 
 		if (GetAsyncKeyState(VK_SPACE)) {
-			mDebugCameraPos = Math::MatrixTranslation(0, _moveSpd * _delta, 0) * mDebugCameraPos;
+			mDebugCameraPos = matrix4::CreateTranslation(0, _moveSpd * _delta, 0) * mDebugCameraPos;
 		}
 		if (GetAsyncKeyState(VK_LBUTTON) & 1 && !mIsMouseDown) {
 			GetCursorPos(&mMouseOrigin);
@@ -444,7 +432,7 @@ namespace RenderEngine {
 				float dx = -(now.x - mMouseOrigin.x) * _rotSpd * _delta;
 				float dy = -(now.y - mMouseOrigin.y) * _rotSpd * _delta;
 
-				mDebugCameraPos = Math::MatrixRotateX(dy) * Math::MatrixRotateY(dx) * mDebugCameraPos;
+				mDebugCameraPos = matrix4::CreateXRotation(dy) * matrix4::CreateYRotation(dx) * mDebugCameraPos;
 
 				// Reset cursor to center of the window.
 				WINDOWINFO winfo;
@@ -455,7 +443,7 @@ namespace RenderEngine {
 			}
 		}
 
-		mVPData.view = Math::MatrixTranspose(mDebugCameraPos).Inverse();
+		mVPData.view = mDebugCameraPos.Transpose().Invert();
 		(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, &mVPData, 0, 0);
 #endif
 	}
@@ -587,10 +575,9 @@ namespace RenderEngine {
 
 
 		if (!mVrSystem) {
-			mDebugCameraPos = Math::MatrixTranslation(1.9f, 0.5f, 8);
-			mVPData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
-			mVPData.view = Math::MatrixTranspose(mDebugCameraPos).Inverse();
-			mVPData.projection = Math::MatrixTranspose(mVPData.projection);
+			mDebugCameraPos = matrix4::CreateTranslation(1.9f, 0.5f, 8);
+			mVPData.projection = ((matrix4)DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000)).Transpose();
+			mVPData.view = mDebugCameraPos.Transpose().Invert();
 			(*mContext)->UpdateSubresource(*mVPBuffer, 0, NULL, &mVPData, 0, 0);
 			(*mContext)->VSSetConstantBuffers(0, 1, mVPBuffer.get());
 		}

@@ -9,7 +9,6 @@
 #include "../Common/Math.h"
 #include "../Objects/Component.h"
 #include "../Objects/BaseObject.h"
-using namespace Math;
 
 //#pragma comment(lib, "AkSoundEngineDLL.lib")
 using namespace AK;

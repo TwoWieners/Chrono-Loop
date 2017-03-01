@@ -15,7 +15,7 @@ virtual void Update() {
 		return;
 	}
 
-		matrix4 mat = Math::FromMatrix(VRInputManager::Instance().iGetTrackedPositions()[0].mDeviceToAbsoluteTracking) * VRInputManager::Instance().iGetPlayerPosition();
+		matrix4 mat = matrix4(VRInputManager::Instance().iGetTrackedPositions()[0].mDeviceToAbsoluteTracking) * VRInputManager::Instance().iGetPlayerPosition();
 			mObject->GetTransform().SetMatrix(mat);
 		}
 

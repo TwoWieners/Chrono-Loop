@@ -33,8 +33,8 @@ struct CCButtonPress : public CodeComponent
 				_col.mVelocity += vel;
 				_col.mAcceleration += vel / _time;
 				if (!mBooped) {
-					Block->GetTransform().SetMatrix(Math::MatrixTranslation(0, -1, 0));
-					Exit->GetTransform().SetMatrix(Math::MatrixTranslation(0, 2, 0));
+					Block->GetTransform().SetMatrix(matrix4::CreateTranslation(0, -1, 0));
+					Exit->GetTransform().SetMatrix(matrix4::CreateTranslation(0, 2, 0));
 					mBooped = true;
 				}
 			}

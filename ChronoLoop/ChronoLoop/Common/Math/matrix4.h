@@ -2,18 +2,29 @@
 #include <DirectXMath.h>
 #include "vec4f.h"
 
+namespace vr {
+	struct HmdMatrix44_t;
+	struct HmdMatrix34_t;
+}
 struct matrix4 {
 	union {
 		DirectX::XMMATRIX matrix;
+
+		// The tiers variable has been deprecated. Please use rows instead.
 		vec4f tiers[4];
 		struct {
+			// This variable has been deprecated. Please use the axis variation instead.
 			vec4f first, second, third, fourth;
 		};
 		vec4f rows[4];
 		struct {
 			vec4f xAxis, yAxis, zAxis, Position;
 		};
+
+		// This is deprecated, please use "range" instead to access the data as an array of floats.
 		float _floats[16];
+
+		float range[16];
 	};
 
 	matrix4();
@@ -34,7 +45,6 @@ struct matrix4 {
 	matrix4& matrix4::operator+=(matrix4 const& _other);
 	vec4f&   matrix4::operator[](unsigned int _index);
 
-	matrix4  Inverse();
 	matrix4  Invert();
 	matrix4  Transpose();
 	matrix4& ToIdentity();

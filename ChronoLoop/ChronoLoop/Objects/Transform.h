@@ -1,6 +1,5 @@
 #pragma once
 #include "../Common/Math.h"
-using namespace Math;
 class Transform
 {
 private:
@@ -9,11 +8,11 @@ private:
 	
 public:
 	void TranslateLocal(float x, float y, float z);
-	void TranslateGlobal(float x, float y, float z) { this->mMatrix = MatrixTranslation(x, y, z); };
-	void Rotate(vec4f axis, float radians);
+	void TranslateGlobal(float x, float y, float z) { this->mMatrix = matrix4::CreateTranslation(x, y, z); };
+	void Rotate(vec3f axis, float radians);
 	void RotateAround(vec4f point, vec4f axis, float radians) {/*Insert Code Here*/ };
 	void RotateInPlace(vec4f& _axis, float _rads) { /*MatrixRotateInPlace()*/ };
-	void Scale(float x, float y, float z) { this->mMatrix = MatrixScale(x, y, z); };
+	void Scale(float x, float y, float z) { this->mMatrix = matrix4::CreateScale(x, y, z); };
 
 	inline matrix4& GetMatrix() { return mMatrix; };
 	inline void GetMatrix(matrix4& _filler) { _filler = mMatrix; }

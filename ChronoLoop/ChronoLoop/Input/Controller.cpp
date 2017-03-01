@@ -71,9 +71,9 @@ void Controller::SetUp(int _index, vr::IVRSystem *_vr) {
 
 matrix4 Controller::GetPosition() {
 	if (GetValid()) {
-		return Math::FromMatrix(VRInputManager::Instance().iGetTrackedPositions()[GetIndex()].mDeviceToAbsoluteTracking) * VRInputManager::Instance().iGetPlayerPosition();
+		return matrix4(VRInputManager::Instance().iGetTrackedPositions()[GetIndex()].mDeviceToAbsoluteTracking) * VRInputManager::Instance().iGetPlayerPosition();
 	} else {
-		return Math::MatrixIdentity();
+		return matrix4();
 	}
 }
 

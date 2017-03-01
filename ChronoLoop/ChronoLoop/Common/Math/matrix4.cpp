@@ -95,14 +95,8 @@ vec4f& matrix4::operator[](unsigned int _index) {
 	return tiers[0];
 }
 
-matrix4 matrix4::Inverse() {
-	matrix4 m;
-	m.matrix = DirectX::XMMatrixInverse(&DirectX::XMMatrixDeterminant(matrix), matrix);
-	return m;
-}
-
 matrix4 matrix4::Invert() {
-	return Inverse();
+	return DirectX::XMMatrixInverse(&DirectX::XMMatrixDeterminant(matrix), matrix);
 }
 
 matrix4 matrix4::Transpose() {

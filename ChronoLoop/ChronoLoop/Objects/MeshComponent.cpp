@@ -13,7 +13,7 @@ MeshComponent::MeshComponent(const char * _path) {
 void MeshComponent::Update() {
 
 	mObject->GetTransform().GetMatrix(mShape->mPosition);
-	mShape->mPosition = Math::MatrixTranspose(mShape->mPosition);
+	mShape->mPosition = mShape->mPosition.Transpose();
 }
 
 void MeshComponent::Destroy() {

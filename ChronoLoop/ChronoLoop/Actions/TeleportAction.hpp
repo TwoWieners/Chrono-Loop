@@ -33,7 +33,7 @@ struct TeleportAction : public CodeComponent {
 			forward *= mObject->GetTransform().GetMatrix();
 			Triangle *tris = mPlaneMesh->GetTriangles();
 			size_t numTris = mPlaneMesh->GetTriangleCount();
-			vec4f position = (mat * mPlaneObject->GetTransform().GetMatrix().Inverse()).fourth;
+			vec4f position = (mat * mPlaneObject->GetTransform().GetMatrix().Invert()).Position;
 			for (unsigned int i = 0; i < numTris; ++i) {
 				float time = 0;
 				if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, forward, time)) {

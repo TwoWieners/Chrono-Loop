@@ -56,7 +56,6 @@ void TimeManipulation::Update() {
 		SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mLeft << std::endl;
 
 		Transform identity;
-		identity.SetMatrix(Math::MatrixIdentity());
 
 		BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
 		MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");

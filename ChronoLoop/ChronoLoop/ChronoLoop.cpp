@@ -134,8 +134,7 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 
 	Transform transform;
-	transform.SetMatrix(MatrixIdentity());
-	matrix4 mat1 = MatrixTranslation(0, 5, 0);
+	matrix4 mat1 = matrix4::CreateTranslation(0, 5, 0);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
 	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -1.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.0f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
@@ -155,8 +154,7 @@ void Update() {
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
 
 	Transform ButtonTransform;
-	ButtonTransform.SetMatrix(MatrixIdentity());
-	matrix4 ButtonMat = MatrixTranslation(-3, 0, 0);
+	matrix4 ButtonMat = matrix4::CreateTranslation(-3, 0, 0);
 	ButtonTransform.SetMatrix(ButtonMat);
 	BaseObject* Button = new BaseObject("button", ButtonTransform);
 	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0,1,0,0));
@@ -166,7 +164,7 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(Button);
 
 	Transform PlaneTransform;
-	PlaneTransform.SetMatrix(MatrixTranslation(0, -1, 0));
+	PlaneTransform.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
 	BaseObject* Floor = Pool::Instance()->iGetObject()->Reset("plane", PlaneTransform);// new BaseObject("plane", PlaneTransform);
 	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
@@ -175,7 +173,6 @@ void Update() {
 	Floor->AddComponent(planeObj);
 	
 	Transform identity;
-	identity.SetMatrix(Math::MatrixIdentity());
 
 	BaseObject* walls = Pool::Instance()->iGetObject()->Reset("walls", PlaneTransform);// new BaseObject("walls", PlaneTransform);
 	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
@@ -262,7 +259,6 @@ void Update() {
 	
 	//Temp Camera OBJ
 	Transform camTrans;
-	camTrans.SetMatrix(MatrixIdentity());
 	BaseObject camObj("TempCam", camTrans);
 	Listener* ears = new Listener();
 	camObj.AddComponent(ears);
@@ -278,8 +274,8 @@ void Update() {
 	headset->AddComponent(visibleMesh2);
 
 	Transform Door, Exit;
-	Door.SetMatrix(Math::MatrixTranslation(0, 2, 0));
-	Exit.SetMatrix(Math::MatrixTranslation(0, -1, 0));
+	Door.SetMatrix(matrix4::CreateTranslation(0, 2, 0));
+	Exit.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
 	BaseObject* ExitWall = Pool::Instance()->iGetObject()->Reset("ExitWall", Exit);
 	MeshComponent *ExitMesh = new MeshComponent("../Resources/ExitDoor.obj");
 	ExitMesh->AddTexture("../Resources/Doors.png", RenderEngine::eTEX_DIFFUSE);

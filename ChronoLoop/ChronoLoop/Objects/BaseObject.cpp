@@ -111,9 +111,7 @@ void BaseObject::Update() {
 }
 
 BaseObject * BaseObject::Reset(std::string _name) {
-	Transform t;
-	t.SetMatrix(Math::MatrixIdentity());
-	Reset(_name, t, nullptr);
+	Reset(_name, Transform(), nullptr);
 	return this;
 }
 

@@ -36,7 +36,7 @@ void VRInputManager::mInitialize(vr::IVRSystem *_vr) {
 	SystemLogger::GetLog() << "Left controller ID:  " << leftID << std::endl;
 	mRightController.SetUp(rightID, mVRSystem);
 	mLeftController.SetUp(leftID, mVRSystem);
-	mPlayerPosition = Math::MatrixTranslation(2, -1, 8);
+	mPlayerPosition = matrix4::CreateTranslation(2, -1, 8);
 }
 
 void VRInputManager::iUpdate() {
@@ -71,6 +71,6 @@ Controller& VRInputManager::iGetController(bool left) {
 }
 
 matrix4 VRInputManager::iGetPlayerWorldPos() {
-		matrix4 temp = FromMatrix(mPoses[0].mDeviceToAbsoluteTracking) * mPlayerPosition;
+		matrix4 temp = (matrix4)(mPoses[0].mDeviceToAbsoluteTracking) * mPlayerPosition;
 		return temp;
 }
