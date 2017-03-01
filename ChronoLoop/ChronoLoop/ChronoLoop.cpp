@@ -363,7 +363,6 @@ void Update() {
 		}
 	}
 	Messager::Destroy();
-
 }
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {

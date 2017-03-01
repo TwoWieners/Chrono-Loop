@@ -1,5 +1,11 @@
-@echo off
+@echo OFF
 echo Loading Visual Studio dev commands.
+
+for /f /F "usebackq skip=4 tokens=1-3" %%i in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\SxS\VS7" /v 14.0') do set VAR=%%i
+
+echo %VAR%
+
+pause
 
 call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\VsDevCmd.bat"
 devenv ChronoLoop.sln /build "Release|x64"

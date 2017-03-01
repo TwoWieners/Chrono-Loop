@@ -21,7 +21,7 @@ private:
 	void SetIndex(int index);
 	void SetValid(bool valid);
 
-	friend class VRInputManager;
+	friend class VIM;
 public:
 
 	vr::TrackedDevicePose_t mPose;
