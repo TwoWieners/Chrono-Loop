@@ -317,9 +317,6 @@
     <ClCompile Include="Rendering\Shader.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Common\Math.cpp">
-      <Filter>Common\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ChronoLoop.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
