@@ -1,6 +1,7 @@
 #include "matrix4.h"
 #include "vec4f.h"
 #include "vec3f.h"
+#include <openvr.h>
 
 using namespace DirectX;
 
@@ -23,6 +24,19 @@ matrix4::matrix4(float _11, float _12, float _13, float _14, float _21, float _2
 }
 
 matrix4::matrix4(DirectX::XMMATRIX _xm) : matrix(_xm) {}
+
+matrix4::matrix4(vr::HmdMatrix44_t & _m) {
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			rows[i].xyzw[j] = _m.m[j][i];
+}
+
+matrix4::matrix4(vr::HmdMatrix34_t & _m) {
+	rows[0].Set(_m.m[0][0], _m.m[1][0], _m.m[2][0], 0.0f);
+	rows[1].Set(_m.m[0][1], _m.m[1][1], _m.m[2][1], 0.0f);
+	rows[2].Set(_m.m[0][2], _m.m[1][2], _m.m[2][2], 0.0f);
+	rows[3].Set(_m.m[0][3], _m.m[1][3], _m.m[2][3], 0.0f);
+}
 
 bool matrix4::operator==(matrix4 const& _other) {
 	for (int i = 0; i < 4; ++i)
