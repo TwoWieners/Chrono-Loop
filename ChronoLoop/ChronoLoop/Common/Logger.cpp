@@ -7,7 +7,7 @@
 
 using namespace std;
 
-SystemLogger::SL* SystemLogger::Log = nullptr;
+SL* SystemLogger::Log = nullptr;
 
 void SystemLogger::PrintTime() {
 	time_t now_t = chrono::system_clock::to_time_t(chrono::system_clock::now());
@@ -16,7 +16,7 @@ void SystemLogger::PrintTime() {
 	GetLog() << nouppercase << "[" << put_time(&now, "%D %r%p")._Fmtfirst << "] ";
 }
 
-SystemLogger::SL::SL(const char * _path) {
+SL::SL(const char * _path) {
 	mOutput.open(_path, ios::app);
 	if(!mOutput.is_open()) {
 		cout << "[Error] Failed to open file stream \"" << _path << "\"" << endl;
@@ -26,121 +26,121 @@ SystemLogger::SL::SL(const char * _path) {
 	mOutput << boolalpha;
 }
 
-SystemLogger::SL::~SL() {
+SL::~SL() {
 	mOutput.close();
 }
 
-SystemLogger::SL &SystemLogger::SL::operator<<(const char i) {
+SL &SL::operator<<(const char i) {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 	
-SystemLogger::SL &SystemLogger::SL::operator<<(const short i) {
+SL &SL::operator<<(const short i) {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(const int i) {
+SL & SL::operator<<(const int i) {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(const float i)
+SL & SL::operator<<(const float i)
 {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(const double i)
+SL & SL::operator<<(const double i)
 {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(const long i) {
+SL & SL::operator<<(const long i) {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(const long long i) {
+SL & SL::operator<<(const long long i) {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(const unsigned char i) {
+SL & SL::operator<<(const unsigned char i) {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(const unsigned short i) {
+SL & SL::operator<<(const unsigned short i) {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(const unsigned int i) {
+SL & SL::operator<<(const unsigned int i) {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(const unsigned long i) {
+SL & SL::operator<<(const unsigned long i) {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(const unsigned long long i) {
+SL & SL::operator<<(const unsigned long long i) {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(const char * i) {
+SL & SL::operator<<(const char * i) {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(const std::string &i) {
+SL & SL::operator<<(const std::string &i) {
 	cout << i;
 	mOutput << i;
 	return *this;
 }
 
-SystemLogger::SL& SystemLogger::SL::operator<<(const vec4i & i) {
+SL& SL::operator<<(const vec4i & i) {
 	cout << "(" << i.x << ", " << i.y << ", " << i.z << ", " << i.w << ")i";
 	mOutput << "(" << i.x << ", " << i.y << ", " << i.z << ", " << i.w << ")i";
 	return *this;
 }
 
-SystemLogger::SL& SystemLogger::SL::operator<<(const vec4f & i) {
+SL& SL::operator<<(const vec4f & i) {
 	cout << "(" << i.x << ", " << i.y << ", " << i.z << ", " << i.w << ")f";
 	mOutput << "(" << i.x << ", " << i.y << ", " << i.z << ", " << i.w << ")f";
 	return *this;
 }
 
-SystemLogger::SL& SystemLogger::SL::operator<<(const vec3f & i) {
+SL& SL::operator<<(const vec3f & i) {
 	cout << "(" << i.x << ", " << i.y << ", " << i.z << ")f";
 	mOutput << "(" << i.x << ", " << i.y << ", " << i.z << ")f";
 	return *this;
 }
 
-SystemLogger::SL& SystemLogger::SL::operator<<(const vec2f & i) {
+SL& SL::operator<<(const vec2f & i) {
 	cout << "(" << i.x << ", " << i.y << ")f";
 	mOutput << "(" << i.x << ", " << i.y << ")f";
 	return *this;
 }
 
-SystemLogger::SL& SystemLogger::SL::operator<<(const matrix4 & m) {
+SL& SL::operator<<(const matrix4 & m) {
 	cout << "[";
 	mOutput << "[";
 	for (unsigned int i = 0; i < 16; ++i) {
@@ -156,35 +156,35 @@ SystemLogger::SL& SystemLogger::SL::operator<<(const matrix4 & m) {
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(ostream &(*pf)(ostream &)) {
+SL & SL::operator<<(ostream &(*pf)(ostream &)) {
 	cout << pf;
 	mOutput << pf;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(ios &(*pf)(ios &)) {
+SL & SL::operator<<(ios &(*pf)(ios &)) {
 	cout << pf;
 	mOutput << pf;
 	return *this;
 }
 
-SystemLogger::SL & SystemLogger::SL::operator<<(ios_base &(*pf)(ios_base &)) {
+SL & SL::operator<<(ios_base &(*pf)(ios_base &)) {
 	cout << pf;
 	mOutput << pf;
 	return *this;
 }
 
-//SystemLogger::SL & SystemLogger::SL::operator<<(void (*pf)(SystemLogger::SL &)) {
+//SL & SL::operator<<(void (*pf)(SL &)) {
 //	pf(*this);
 //	return *this;
 //}
 //
-//SystemLogger::SL & SystemLogger::SL::operator<<(void (SystemLogger::SL::* pf)()) {
+//SL & SL::operator<<(void (SL::* pf)()) {
 //	(this->*(pf))();
 //	return *this;
 //}
 
-SystemLogger::SL & SystemLogger::SL::flush() {
+SL & SL::flush() {
 	cout.flush();
 	mOutput.flush();
 	return *this;

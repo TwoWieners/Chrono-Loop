@@ -5,10 +5,11 @@
 
 namespace Epoch {
 
-	enum class ControllerType {
+	enum ControllerType {
 		Primary = 0,
 		Secondary
 	};
+
 	typedef std::pair<ControllerType, vr::ETrackedControllerRole> ControllerMap;
 
 	class VIM {
@@ -47,10 +48,11 @@ namespace Epoch {
 }
 
 namespace std {
-	template<>
+	template <>
 	class hash<Epoch::ControllerMap> {
-		size_t operator()(const Epoch::ControllerMap& _map) {
-			return (size_t)_map.first;
+	public:
+		size_t operator()(const Epoch::ControllerMap& contint) {
+			return hash<int>()(contint.first);
 		}
 	};
 }

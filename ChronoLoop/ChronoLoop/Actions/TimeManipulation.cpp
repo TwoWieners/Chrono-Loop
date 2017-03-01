@@ -47,7 +47,7 @@ void TimeManipulation::Update() {
 	//	//((MeshComponent*)BaseObject::GetObjectByName("plane")->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture(textureName.c_str(), eTEX_CUSTOM1);
 	//	mTexturedApplied = true;
 	//}
-	if (VRInputManager::Instance().iGetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
+	if (Epoch::VRInputManager::Instance().GetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
 		int frameRewind = 30;
 
 		if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
@@ -83,7 +83,7 @@ void TimeManipulation::Update() {
 		TimeManager::Instance()->AddObjectToTimeline(Controller2);
 		mCloneCount++;
 	}
-	if (VRInputManager::Instance().iGetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
+	if (Epoch::VRInputManager::Instance().GetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
 		Level* CurLev = Level::Instance();
 		TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - 30, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID());
 	}
