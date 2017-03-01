@@ -413,7 +413,6 @@
     <ClCompile Include="Messager\Messager.cpp">
       <Filter>Messanger\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="Input\Controller.cpp">
       <Filter>Input\Source Files</Filter>
     </ClCompile>
@@ -500,6 +499,9 @@
     </ClCompile>
     <ClCompile Include="Common\Math\vec4i.cpp">
       <Filter>Common\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\KeyboardInput.cpp">
+      <Filter>Input\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

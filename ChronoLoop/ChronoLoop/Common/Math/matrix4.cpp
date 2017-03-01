@@ -90,9 +90,19 @@ matrix4& matrix4::operator+=(matrix4 const& _other) {
 }
 
 vec4f& matrix4::operator[](unsigned int _index) {
-	if (_index < 4)
-		return tiers[_index];
-	return tiers[0];
+	return rows[_index];
+}
+
+vec4f matrix4::operator[](unsigned int _index) const {
+	return rows[_index];
+}
+
+vec4f & matrix4::operator[](int _index) {
+	return rows[_index];
+}
+
+vec4f matrix4::operator[](int _index) const {
+	return rows[_index];
 }
 
 matrix4 matrix4::Invert() {

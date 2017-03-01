@@ -72,7 +72,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	vr::IVRSystem *vrsys = nullptr;
 	vrsys = vr::VR_Init(&pError, vr::VRApplication_Scene);
 	if (pError != vr::HmdError::VRInitError_None) {
-		SystemLogger::GetLog() << "Could not initialize OpenVR for reasons!" << std::endl;
+		SystemLogger::Error() << "Could not initialize OpenVR for reasons!" << std::endl;
 	}
 
 	if (vrsys != nullptr) {
@@ -93,8 +93,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	vr::VR_Shutdown();
 	RenderEngine::ShutdownSystems();
 	Level::DestroyInstance();
-	SystemLogger::CloseLog();
-	SystemLogger::CloseError();
+	SystemLogger::DestroyInstance();
 	vrsys = nullptr;
 
 #if _DEBUG
@@ -351,7 +350,7 @@ void Update() {
 			}
 			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
 
-			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
+			//SystemLogger::Debug() << "Regular Update " << std::endl;
 			UpdateTime();
 			Level::Instance()->iUpdate();
 			

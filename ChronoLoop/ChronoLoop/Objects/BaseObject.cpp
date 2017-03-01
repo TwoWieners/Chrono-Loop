@@ -35,7 +35,7 @@ BaseObject::BaseObject(std::string _name, Transform _transform, BaseObject * _pa
 BaseObject::~BaseObject()
 {
 	if (mDestroyed) {
-		SystemLogger::GetError() << "[FATAL] Deleting an object that is marked as destroyed!" << std::endl;
+		SystemLogger::Fatal() << "Deleting an object that is marked as destroyed!" << std::endl;
 		Debug::SetBreakpoint();
 	} else {
 		Destroy();
@@ -77,7 +77,7 @@ BaseObject& BaseObject::operator=(BaseObject& _equals)
 void BaseObject::Destroy()
 {
 	if (mDestroyed) {
-		SystemLogger::GetError() << "[Error] Attempting to destroy an object that is already marked as destroyed." << std::endl;
+		SystemLogger::Error() << "Attempting to destroy an object that is already marked as destroyed." << std::endl;
 		return;
 	}
 	mParent = nullptr;
@@ -97,7 +97,7 @@ void BaseObject::Destroy()
 
 void BaseObject::Update() {
 	if (mDestroyed) {
-		SystemLogger::GetError() << "[Error] Attempting to update an object that is already marked as destroyed." << std::endl;
+		SystemLogger::Error() << "Attempting to update an object that is already marked as destroyed." << std::endl;
 		return;
 	}
 	for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
@@ -131,21 +131,21 @@ void BaseObject::SetName(std::string _name) {
 	if (Level::Instance()->iOnObjectNamechange(this, _name)) {
 		mName = _name;
 	} else {
-		SystemLogger::GetError() << "[Error] A name change was requested for an object that did not exist in the level." << std::endl;
+		SystemLogger::Error() << "A name change was requested for an object that did not exist in the level." << std::endl;
 	}
 }
 
 unsigned int BaseObject::AddComponent(Component * _comp) {
 	if (mDestroyed) {
-		SystemLogger::GetError() << "[Error] Attempting to add a compontnet to an object that is already marked as destroyed." << std::endl;
+		SystemLogger::Error() << "Attempting to add a compontnet to an object that is already marked as destroyed." << std::endl;
 		return -1;
 	}
 	if (_comp->GetType() == eCOMPONENT_MAX) {
-		SystemLogger::GetError() << "[Error] Trying to add a component with an invalid type. This is not allowed, returning -1U." << std::endl;
+		SystemLogger::Error() << "Trying to add a component with an invalid type. This is not allowed, returning -1U." << std::endl;
 		return -1;
 	}
 	if (!_comp->IsValid()) {
-		SystemLogger::GetError() << "[Error] Attempted to add a component that is marked invalid. It will be deleted." << std::endl;
+		SystemLogger::Error() << "Attempted to add a component that is marked invalid. It will be deleted." << std::endl;
 		delete _comp;
 		return -1;
 	}
@@ -156,11 +156,11 @@ unsigned int BaseObject::AddComponent(Component * _comp) {
 
 bool BaseObject::RemoveComponent(Component * _comp) {
 	if (mDestroyed) {
-		SystemLogger::GetError() << "[Error] Attempting to remove a component from an object that is already marked as destroyed." << std::endl;
+		SystemLogger::Error() << "Attempting to remove a component from an object that is already marked as destroyed." << std::endl;
 		return false;
 	}
 	if (_comp->GetType() == eCOMPONENT_MAX) {
-		SystemLogger::GetError() << "[Error] Trying to remove a component with an invalid type. This is not allowed, returning -1U." << std::endl;
+		SystemLogger::Error() << "Trying to remove a component with an invalid type. This is not allowed, returning -1U." << std::endl;
 		return false;
 	}
 	ComponentType type = _comp->GetType();

@@ -11,7 +11,7 @@ namespace RenderEngine {
 	void RenderSet::AddNode(RenderNode *_node, RenderContext* _rc) {
 		if (_node->mType == RenderNode::RenderNodeType::Shape) {
 			if (((RenderShape*)_node)->mIndexCount == 0) {
-				SystemLogger::GetError() << "[Error] Attempting to set render shape with 0 indices!" << std::endl;
+				SystemLogger::Error() << "Attempting to set render shape with 0 indices!" << std::endl;
 				Debug::SetBreakpoint();
 			}
 		}
@@ -122,7 +122,7 @@ namespace RenderEngine {
 	RenderSet::~RenderSet() {
 		mContexts.clear();
 		while (mHead) {
-			SystemLogger::GetError() << "[Warning] Nodes are being removed from the RenderSet in its destructor. This means nodes are no longer being rendered, but are still in memory, likely implying a leak somewhere." << std::endl;
+			SystemLogger::Warn() << "Nodes are being removed from the RenderSet in its destructor. This means nodes are no longer being rendered, but are still in memory, likely implying a leak somewhere." << std::endl;
 			RenderNode *n = mHead;
 			mHead = mHead->mNext;
 			//delete n;

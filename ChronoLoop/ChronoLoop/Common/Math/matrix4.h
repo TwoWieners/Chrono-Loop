@@ -44,6 +44,9 @@ struct matrix4 {
 	matrix4  matrix4::operator+(matrix4 const& _other);
 	matrix4& matrix4::operator+=(matrix4 const& _other);
 	vec4f&   matrix4::operator[](unsigned int _index);
+	vec4f    matrix4::operator[](unsigned int _index) const;
+	vec4f&   matrix4::operator[](int _index);
+	vec4f    matrix4::operator[](int _index) const;
 
 	matrix4  Invert();
 	matrix4  Transpose();

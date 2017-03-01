@@ -83,7 +83,7 @@ struct BoxSnapToControllerAction : public CodeComponent {
 			vec2f touch = leftController.GetAxis();
 			mBootleg.AddHead(touch);
 
-			//SystemLogger::GetLog() << "(" << touch.x << "," << touch.y << ")" << std::endl;
+			//SystemLogger::Debug() << touch << std::endl;
 			if (mBootleg.mSize == mBootleg.mLimit) {
 				// Get initial point, get vector from it's negation (v - (-v)), and then cross it (v.y, -v.x)
 				vec2f initialPoint = mBootleg[0];
@@ -95,14 +95,14 @@ struct BoxSnapToControllerAction : public CodeComponent {
 				vec2f nLeg = leg.Normalize();
 				if (leg.SquaredMagnitude() >= 0.01f) {
 					if (nLeg * counterClockwise < 0) {
-						SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
+						SystemLogger::Debug() << "Somewhat Clockwise" << std::endl;
 					}
 					if (nLeg * counterClockwise > 0) {
-						SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
+						SystemLogger::Debug() << "Somewhat Counter-Clockwise" << std::endl;
 					}
 				}
 			}
-			//SystemLogger::GetLog() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
+			//SystemLogger::Debug() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
 #pragma endregion Gestures
 		}
 		//mObject->GetTransform().SetMatrix(Math::MatrixRotateInPlace(mObject->GetTransform().GetMatrix(), 1, 0, 0, DirectX::XM_PI / 1024.0f));

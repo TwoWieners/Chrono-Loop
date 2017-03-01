@@ -537,8 +537,8 @@ namespace RenderEngine {
 		if (mVrSystem) {
 			uint32_t texWidth, texHeight;
 			mVrSystem->GetRecommendedRenderTargetSize(&texWidth, &texHeight);
-			SystemLogger::GetLog() << "According to VR, the view of our headset is " << texWidth << "x" << texHeight << std::endl;
-			SystemLogger::GetLog() << "The screen will probably look bad. We're just using one render target view currently, and it gets set to the VR headset's recommended resolution when it's plugged in.\n" <<
+			SystemLogger::Debug() << "According to VR, the view of our headset is " << texWidth << "x" << texHeight << std::endl;
+			SystemLogger::Debug() << "The screen will probably look bad. We're just using one render target view currently, and it gets set to the VR headset's recommended resolution when it's plugged in.\n" <<
 				"We should account for that later." << std::endl;
 			rtvWidth = (int)texWidth;
 			rtvHeight = (int)texHeight;
@@ -586,7 +586,7 @@ namespace RenderEngine {
 		//char buffer[2048];
 		//for (int i = 0; i < vr::VRRenderModels()->GetRenderModelCount(); ++i) {
 		//	vr::VRRenderModels()->GetRenderModelName((uint32_t)i, buffer, 2048);
-		//	SystemLogger::GetLog() << buffer << std::endl;
+		//	SystemLogger::Info() << buffer << std::endl;
 		//}
 		return true;
 	}

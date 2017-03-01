@@ -1,56 +1,102 @@
 #pragma once
 #include <sstream>
 #include <fstream>
-//#include <mutex>
+
+struct vec4i;
+struct vec4f;
+struct vec3f;
+struct vec2f;
+struct matrix4;
 
 class SystemLogger {
-		
-	static SystemLogger *Info, *Error;
+public:
+	class SL;
+
+private:
+	static SL *Log;
 
 	SystemLogger(const char *_path);
 	~SystemLogger();
 	std::ofstream output;
-	bool canPrintTime = true;
 	void PrintTime();
+
 public:
+	class SL {
+		std::ofstream mOutput;
 
-	inline static SystemLogger& GetLog() { 
-		if (nullptr == Info) { 
-			Info = new SystemLogger("../Logs/Log.log");
+	public:
+		SL(const char* _path);
+		~SL();
+		SL& operator<<(const char i);
+		SL& operator<<(const short i);
+		SL& operator<<(const int i);
+		SL& operator<<(const float i);
+		SL& operator<<(const double i);
+		SL& operator<<(const long i);
+		SL& operator<<(const long long i);
+		SL& operator<<(const unsigned char i);
+		SL& operator<<(const unsigned short i);
+		SL& operator<<(const unsigned int i);
+		SL& operator<<(const unsigned long i);
+		SL& operator<<(const unsigned long long i);
+		SL& operator<<(const char *i);
+		SL& operator<<(const std::string &i);
+		SL& operator<<(const vec4i& i);
+		SL& operator<<(const vec4f& i);
+		SL& operator<<(const vec3f& i);
+		SL& operator<<(const vec2f& i);
+		SL& operator<<(const matrix4& i);
+		SL& operator<<(std::ostream& (*pf)(std::ostream&)); // Stream manipulator
+		SL& operator<<(std::ios& (*pf)(std::ios&));
+		SL& operator<<(std::ios_base& (*pf)(std::ios_base&));
+		SL& flush();
+	};
+
+	inline static SL& GetLog() { 
+		if (nullptr == Log) { 
+			Log = new SL("Log.log");
 		}
-		Info->canPrintTime = true;
-		return *Info;
+		return *Log;
 	}
-	inline static SystemLogger& GetError() {
-		if (nullptr == Error) {
-			Error = new SystemLogger("../Logs/Error.log");
+
+	inline static SL& GetError() {
+		return GetLog();
+	}
+
+	inline static SL& Fatal() {
+		SL& log = GetLog();
+		log << "[FATAL] ";
+		return log;
+	}
+
+	inline static SL& Error() {
+		SL& log = GetLog();
+		log << "[ERROR] ";
+		return log;
+	}
+
+	inline static SL& Warn() {
+		SL& log = GetLog();
+		log << "[WARNING] ";
+		return log;
+	}
+
+	inline static SL& Info() {
+		SL& log = GetLog();
+		log << "[INFO] ";
+		return log;
+	}
+
+	inline static SL& Debug() {
+		SL& log = GetLog();
+		log << "[DEBUG] ";
+		return log;
+	}
+
+	inline static void DestroyInstance() {
+		if (nullptr != Log) {
+			delete Log;
+			Log = nullptr;
 		}
-		Error->canPrintTime = true;
-		return *Error;
 	}
-	inline static void CloseLog() { if (Info != nullptr) { delete Info; } }
-	inline static void CloseError() { if (Error != nullptr) { delete Error; } }
-
-	//static void lock(SystemLogger& _log);
-
-	SystemLogger& operator<<(const char i);
-	SystemLogger& operator<<(const short i);
-	SystemLogger& operator<<(const int i);
-	SystemLogger& operator<<(const float i);
-	SystemLogger& operator<<(const double i);
-	SystemLogger& operator<<(const long i);
-	SystemLogger& operator<<(const long long i);
-	SystemLogger& operator<<(const unsigned char i);
-	SystemLogger& operator<<(const unsigned short i);
-	SystemLogger& operator<<(const unsigned int i);
-	SystemLogger& operator<<(const unsigned long i);
-	SystemLogger& operator<<(const unsigned long long i);
-	SystemLogger& operator<<(const char *i);
-	SystemLogger& operator<<(const std::string &i);
-	SystemLogger& operator<<(std::ostream& (*pf)(std::ostream&)); // Stream manipulator
-	SystemLogger& operator<<(std::ios& (*pf)(std::ios&));
-	SystemLogger& operator<<(std::ios_base& (*pf)(std::ios_base&));
-	SystemLogger& operator<<(void (*pf)(SystemLogger&));  // For custom manipulators, with which things such as mutex locking can occur.
-	SystemLogger& operator<<(void (SystemLogger::*pf)());	// For custom manipulators, with which things such as mutex locking can occur.
-	SystemLogger& flush();
 };

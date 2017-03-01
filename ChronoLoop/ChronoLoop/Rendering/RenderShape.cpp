@@ -46,7 +46,7 @@ namespace RenderEngine {
 #if _DEBUG
 		if (_mesh.VertSize() == 0) {
 			Debug::SetBreakpoint();
-			SystemLogger::GetError() << "[Error] Attempting to load an empty mesh in RenderShape!" << std::endl;
+			SystemLogger::Error() << "Attempting to load an empty mesh in RenderShape!" << std::endl;
 		}
 #endif
 
@@ -90,11 +90,11 @@ namespace RenderEngine {
 	void RenderShape::SetShaders(PixelShaderFormat pf, VertexShaderFormat vf)
 	{
 		if (pf < ePS_BASIC || pf >= ePS_MAX) {
-			SystemLogger::GetError() << "[Error] Invalid Pixel shader enumation at RenderShape::SetShaders: " << pf << ". Forcing to ePS_MAX!" << std::endl;
+			SystemLogger::Error() << "Invalid Pixel shader enumation at RenderShape::SetShaders: " << pf << ". Forcing to ePS_MAX!" << std::endl;
 			pf = ePS_MAX;
 		}
 		if (vf < eVS_BASIC || vf >= eVS_MAX) {
-			SystemLogger::GetError() << "[Error] Invalid VertexShader enumation at RenderShape::SetShaders: " << vf << ". Forcing to eVS_MAX!" << std::endl;
+			SystemLogger::Error() << "Invalid VertexShader enumation at RenderShape::SetShaders: " << vf << ". Forcing to eVS_MAX!" << std::endl;
 			vf = eVS_MAX;
 		}
 		mContext.mVertexShaderFormat = vf;
@@ -107,7 +107,7 @@ namespace RenderEngine {
 		if (stat == TextureManager::TextureStatus::eSuccess) {
 			mContext.mTextures[_position] = srv;
 		} else {
-			SystemLogger::GetError() << "[Error] Failed to get synchronous texture from TextureManager!" << std::endl;
+			SystemLogger::Error() << "Failed to get synchronous texture from TextureManager!" << std::endl;
 		}
 		return *this;
 	}

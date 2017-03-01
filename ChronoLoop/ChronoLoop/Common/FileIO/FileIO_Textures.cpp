@@ -24,7 +24,7 @@ namespace FileIO {
 		HRESULT hr = LoadFromDDSFile(buffer, 0, nullptr, scratch);
 		if (FAILED(hr)) {
 			if (hr == E_OUTOFMEMORY) {
-				SystemLogger::GetError() << "[Critial] System ran out of memory attempting to allocate storage for texture \"" << _path << "\"!" << endl;
+				SystemLogger::Fatal() << "System ran out of memory attempting to allocate storage for texture \"" << _path << "\"!" << endl;
 				delete[] buffer;
 				if (_srv) {
 					(*_srv) = nullptr;
@@ -34,12 +34,12 @@ namespace FileIO {
 				}
 				return false;
 			}
-			SystemLogger::GetError() << "[Warning] Requested texture \"" << _path << "\" could not be loaded as a DDS file: 0x" << hex << hr << dec << ". Attempting as WIC file..." << endl;
+			SystemLogger::Warn() << "Requested texture \"" << _path << "\" could not be loaded as a DDS file: 0x" << hex << hr << dec << ". Attempting as WIC file..." << endl;
 			TexMetadata tMeta;
 			hr = LoadFromWICFile(buffer, 0, &tMeta, scratch);
 			delete[] buffer;
 			if (FAILED(hr)) {
-				SystemLogger::GetError() << "[Error] Could not load texture \"" << _path << "\": 0x" << hex << hr << dec << endl;
+				SystemLogger::Error() << "Could not load texture \"" << _path << "\": 0x" << hex << hr << dec << endl;
 				if (_srv) {
 					(*_srv) = nullptr;
 				}
@@ -52,12 +52,12 @@ namespace FileIO {
 			ID3D11Resource *texture;
 			hr = CreateShaderResourceView(*RenderEngine::Renderer::Instance()->iGetDevice(), scratch.GetImage(0, 0, 0), 1, tMeta, &srv);
 			if (FAILED(hr)) {
-				SystemLogger::GetError() << "[Error] Failed to create ShaderResourceView for texture \"" << _path << "\": 0x" << hex << hr << dec << endl;
+				SystemLogger::Error() << "Failed to create ShaderResourceView for texture \"" << _path << "\": 0x" << hex << hr << dec << endl;
 				// We don't return false because the shader resource view is technically unnecessary, a texture2D might have been the goal all along.
 			}
 			hr = CreateTexture(*RenderEngine::Renderer::Instance()->iGetDevice(), scratch.GetImage(0, 0, 0), 1, tMeta, &texture);
 			if (FAILED(hr)) {
-				SystemLogger::GetError() << "[Error] Failed to create Texture2D for \"" << _path << "\": 0x" << hex << hr << dec << endl;
+				SystemLogger::Error() << "Failed to create Texture2D for \"" << _path << "\": 0x" << hex << hr << dec << endl;
 				if (_srv) {
 					(*_srv) = nullptr;
 				}
@@ -90,7 +90,7 @@ namespace FileIO {
 		ID3D11ShaderResourceView *srv;
 		hr = CreateDDSTextureFromMemory(*RenderEngine::Renderer::Instance()->iGetDevice(), scratch.GetPixels(), scratch.GetPixelsSize(), &texture, &srv);
 		if (FAILED(hr)) {
-			SystemLogger::GetError() << "[Error] Failed to create texture and shader resource view: 0x" << hex << hr << dec << endl;
+			SystemLogger::Error() << "Failed to create texture and shader resource view: 0x" << hex << hr << dec << endl;
 			if (_srv) {
 				(*_srv) = nullptr;
 			}
@@ -109,7 +109,7 @@ namespace FileIO {
 
 		if (_srv == nullptr) {
 			// If both inputs are nullptr, the function returns false, so _texture may be assumed valid.
-			SystemLogger::GetError() << "[Warning] The resource view is a nullptr, but the texture is valid. The resource view will be released now, but this ay not be the desired behavior." << endl;
+			SystemLogger::Warn() << "The resource view is a nullptr, but the texture is valid. The resource view will be released now, but this ay not be the desired behavior." << endl;
 			srv->Release();
 		}
 

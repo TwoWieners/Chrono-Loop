@@ -53,7 +53,7 @@ void TimeManipulation::Update() {
 		if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
 			return;
 
-		SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mLeft << std::endl;
+		SystemLogger::Debug() << "A clone is being made, please hold: " << mCloneCount << " | Is left: " << mLeft << std::endl;
 
 		Transform identity;
 
