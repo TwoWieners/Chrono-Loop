@@ -15,10 +15,10 @@ unsigned int LimitedList::GetLimit() {
 
 void LimitedList::SetLimit(unsigned int _size) {
 	if (_size < mLimit) {
-		SystemLogger::GetError() << "[Warning] The requested size (" << _size << ") is smaller than the current size (" << mLimit << "). A memory leak is probable." << std::endl;
+		SystemLogger::Warn() << "The requested size (" << _size << ") is smaller than the current size (" << mLimit << "). A memory leak is probable." << std::endl;
 	}
 	if (_size > 100) {
-		SystemLogger::GetError() << "[Warning] The requested size (" << _size << ") is greater than 100. Are you sure LimitedList is the best solution for your problem?" << std::endl;
+		SystemLogger::Warn() << "The requested size (" << _size << ") is greater than 100. Are you sure LimitedList is the best solution for your problem?" << std::endl;
 	}
 	mLimit = _size;
 }

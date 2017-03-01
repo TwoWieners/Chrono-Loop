@@ -8,49 +8,45 @@ struct vec3f;
 struct vec2f;
 struct matrix4;
 
-class SystemLogger {
+class SL {
+	std::ofstream mOutput;
+	friend class SystemLogger;
+	SL(const char* _path);
+	~SL();
 public:
-	class SL;
+	SL& operator<<(const char i);
+	SL& operator<<(const short i);
+	SL& operator<<(const int i);
+	SL& operator<<(const float i);
+	SL& operator<<(const double i);
+	SL& operator<<(const long i);
+	SL& operator<<(const long long i);
+	SL& operator<<(const unsigned char i);
+	SL& operator<<(const unsigned short i);
+	SL& operator<<(const unsigned int i);
+	SL& operator<<(const unsigned long i);
+	SL& operator<<(const unsigned long long i);
+	SL& operator<<(const char *i);
+	SL& operator<<(const std::string &i);
+	SL& operator<<(const vec4i& i);
+	SL& operator<<(const vec4f& i);
+	SL& operator<<(const vec3f& i);
+	SL& operator<<(const vec2f& i);
+	SL& operator<<(const matrix4& i);
+	SL& operator<<(std::ostream& (*pf)(std::ostream&)); // Stream manipulator
+	SL& operator<<(std::ios& (*pf)(std::ios&));
+	SL& operator<<(std::ios_base& (*pf)(std::ios_base&));
+	SL& flush();
+};
 
-private:
+class SystemLogger {
 	static SL *Log;
 
-	SystemLogger(const char *_path);
-	~SystemLogger();
+	SystemLogger();
 	std::ofstream output;
 	void PrintTime();
 
 public:
-	class SL {
-		std::ofstream mOutput;
-
-	public:
-		SL(const char* _path);
-		~SL();
-		SL& operator<<(const char i);
-		SL& operator<<(const short i);
-		SL& operator<<(const int i);
-		SL& operator<<(const float i);
-		SL& operator<<(const double i);
-		SL& operator<<(const long i);
-		SL& operator<<(const long long i);
-		SL& operator<<(const unsigned char i);
-		SL& operator<<(const unsigned short i);
-		SL& operator<<(const unsigned int i);
-		SL& operator<<(const unsigned long i);
-		SL& operator<<(const unsigned long long i);
-		SL& operator<<(const char *i);
-		SL& operator<<(const std::string &i);
-		SL& operator<<(const vec4i& i);
-		SL& operator<<(const vec4f& i);
-		SL& operator<<(const vec3f& i);
-		SL& operator<<(const vec2f& i);
-		SL& operator<<(const matrix4& i);
-		SL& operator<<(std::ostream& (*pf)(std::ostream&)); // Stream manipulator
-		SL& operator<<(std::ios& (*pf)(std::ios&));
-		SL& operator<<(std::ios_base& (*pf)(std::ios_base&));
-		SL& flush();
-	};
 
 	inline static SL& GetLog() { 
 		if (nullptr == Log) { 

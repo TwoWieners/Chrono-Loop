@@ -34,7 +34,7 @@ inline unsigned int Pool::iGetSize() {
 
 void Pool::iResize(unsigned int _size) {
 	if (_size > 5000) {
-		SystemLogger::GetError() << "[Warning] The size of the pool has been set to " << _size << ", which is pretty big. Was this intentional?" << std::endl;
+		SystemLogger::Warn() << "The size of the pool has been set to " << _size << ", which is pretty big. Was this intentional?" << std::endl;
 	}
 	if (_size < mSize) {
 		// Delete objects to reach the size.

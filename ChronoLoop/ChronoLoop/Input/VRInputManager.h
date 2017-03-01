@@ -3,6 +3,10 @@
 #include "Controller.h"
 #include "../Common/Math.h"
 
+class VIM {
+	
+};
+
 class VRInputManager {
 private:
 	static VRInputManager* sInstance;
