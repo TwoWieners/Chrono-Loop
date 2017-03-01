@@ -1,5 +1,8 @@
 #include "matrix4.h"
 #include "vec4f.h"
+#include "vec3f.h"
+
+using namespace DirectX;
 
 matrix4::matrix4() {
 	tiers[0].Set(1, 0, 0, 0);
@@ -18,6 +21,8 @@ matrix4::matrix4(float _11, float _12, float _13, float _14, float _21, float _2
 	tiers[2].Set(_31, _32, _33, _34);
 	tiers[3].Set(_41, _42, _43, _44);
 }
+
+matrix4::matrix4(DirectX::XMMATRIX _xm) : matrix(_xm) {}
 
 bool matrix4::operator==(matrix4 const& _other) {
 	for (int i = 0; i < 4; ++i)
@@ -80,4 +85,70 @@ matrix4 matrix4::Inverse() {
 	matrix4 m;
 	m.matrix = DirectX::XMMatrixInverse(&DirectX::XMMatrixDeterminant(matrix), matrix);
 	return m;
+}
+
+matrix4 matrix4::Invert() {
+	return Inverse();
+}
+
+matrix4 matrix4::Transpose() {
+	return XMMatrixTranspose(matrix);
+}
+
+matrix4 & matrix4::ToIdentity() {
+	rows[0].Set(1, 0, 0, 0);
+	rows[1].Set(0, 1, 0, 0);
+	rows[2].Set(0, 0, 1, 0);
+	rows[3].Set(0, 0, 0, 1);
+	return *this;
+}
+
+matrix4& matrix4::RotateInPlace(float _x, float _y, float _z, float _rads) {
+	vec3f axis;
+	axis.Set(_x, _y, _z);
+	return RotateInPlace(axis, _rads);
+}
+
+matrix4 & matrix4::RotateInPlace(const vec3f& _axis, float _rads) {
+	vec4f pos = Position;
+	Position.Set(0, 0, 0, 1);
+	*this *= CreateAxisRotation(_axis, _rads);
+	Position = pos;
+	return *this;
+}
+
+matrix4 & matrix4::RotateInPlaceQuaternion(const vec4f & _quat) {
+	vec4f pos = Position;
+	Position.Set(0, 0, 0, 1);
+	*this *= CreateQuaternionRotation(_quat);
+	Position = pos;
+	return *this;
+}
+
+matrix4 matrix4::CreateAxisRotation(const vec3f & _axis, float _rads) {
+	return XMMatrixRotationAxis(_axis.vector, _rads);
+}
+
+matrix4 matrix4::CreateQuaternionRotation(const vec4f & _quat) {
+	return XMMatrixRotationQuaternion(_quat.vector);
+}
+
+matrix4 matrix4::CreateXRotation(float _rads) {
+	return XMMatrixRotationX(_rads);
+}
+
+matrix4 matrix4::CreateYRotation(float _rads) {
+	return XMMatrixRotationY(_rads);
+}
+
+matrix4 matrix4::CreateZRotation(float _rads) {
+	return XMMatrixRotationZ(_rads);
+}
+
+matrix4 matrix4::CreateScale(float _x, float _y, float _z) {
+	return XMMatrixScaling(_x, _y, _z);
+}
+
+matrix4 matrix4::CreateTranslation(float _x, float _y, float _z) {
+	return XMMatrixTranslation(_x, _y, _z);
 }
