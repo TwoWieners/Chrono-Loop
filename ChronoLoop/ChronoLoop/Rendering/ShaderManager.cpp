@@ -6,7 +6,7 @@
 #include <memory>
 #include "../Common/Logger.h"
 
-namespace RenderEngine {
+namespace Epoch {
 
 	ShaderManager* ShaderManager::sInstance = nullptr;
 
@@ -15,7 +15,7 @@ namespace RenderEngine {
 		char *buffer;
 		int byteSize = 0;
 		ID3D11PixelShader *ps;
-		if (!FileIO::LoadBytes("BasicPixel.cso", &buffer, byteSize)) {
+		if (!IO::LoadBytes("BasicPixel.cso", &buffer, byteSize)) {
 			SystemLogger::Error() << "An error has occurred when trying to read BasicPixel.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
 			mPixelShaders[ePS_BASIC] = std::make_shared<ID3D11PixelShader*>(nullptr);
 		} else {
@@ -24,7 +24,7 @@ namespace RenderEngine {
 			delete[] buffer;
 		}
 
-		if (!FileIO::LoadBytes("TexturedPixel.cso", &buffer, byteSize)) {
+		if (!IO::LoadBytes("TexturedPixel.cso", &buffer, byteSize)) {
 			SystemLogger::Error() << "An error has occurred when trying to read TexturedPixel.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
 			mPixelShaders[ePS_TEXTURED] = std::make_shared<ID3D11PixelShader*>(nullptr);
 		} else {
@@ -36,7 +36,7 @@ namespace RenderEngine {
 
 		// Create Vertex Shaders.
 		ID3D11VertexShader *vs;
-		if (!FileIO::LoadBytes("BasicVertex.cso", &buffer, byteSize)) {
+		if (!IO::LoadBytes("BasicVertex.cso", &buffer, byteSize)) {
 			SystemLogger::Error() << "An error has occurred when trying to read BasicVertex.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
 			mVertexShaders[eVS_BASIC] = std::make_shared<ID3D11VertexShader*>(nullptr);
 		} else {
@@ -45,7 +45,7 @@ namespace RenderEngine {
 			delete[] buffer;
 		}
 
-		if (!FileIO::LoadBytes("TexturedVertex.cso", &buffer, byteSize)) {
+		if (!IO::LoadBytes("TexturedVertex.cso", &buffer, byteSize)) {
 			SystemLogger::Error() << "An error has occurred when trying to read TexturedVertex.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
 			mVertexShaders[eVS_TEXTURED] = std::make_shared<ID3D11VertexShader*>(nullptr);
 		} else {

@@ -3,8 +3,8 @@
 #include <intrin.h>
 #endif
 
-namespace Debug {
-
-	void SetBreakpoint();
-
+namespace Epoch {
+	namespace Debug {
+		void SetBreakpoint();
+	}
 }

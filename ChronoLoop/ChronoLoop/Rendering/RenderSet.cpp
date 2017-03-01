@@ -7,7 +7,7 @@
 #include "../Common/Logger.h"
 #include <algorithm>
 
-namespace RenderEngine {
+namespace Epoch {
 	void RenderSet::AddNode(RenderNode *_node, RenderContext* _rc) {
 		if (_node->mType == RenderNode::RenderNodeType::Shape) {
 			if (((RenderShape*)_node)->mIndexCount == 0) {

@@ -2,8 +2,7 @@
 #include <d3d11.h>
 #include "RendererDefines.h"
 
-namespace RenderEngine {
-	
+namespace Epoch {
 
 	class RasterizerStateManager {
 		static RasterizerStateManager* sInstance;
@@ -20,4 +19,5 @@ namespace RenderEngine {
 		// Instance Functions
 		bool ApplyState(RasterState rs);
 	};
+
 }

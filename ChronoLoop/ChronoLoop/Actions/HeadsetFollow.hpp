@@ -4,19 +4,22 @@
 #include "Objects/BaseObject.h"
 #include "Input/VRInputManager.h"
 
-class HeadsetFollow : public CodeComponent
-{
-private:
-	
-public:
+namespace Epoch {
 
-virtual void Update() {
-	if (!VRInputManager::Instance().iIsInitialized()) {
-		return;
-	}
+	class HeadsetFollow : public CodeComponent {
+	private:
 
-		matrix4 mat = matrix4(VRInputManager::Instance().iGetTrackedPositions()[0].mDeviceToAbsoluteTracking) * VRInputManager::Instance().iGetPlayerPosition();
+	public:
+
+		virtual void Update() {
+			if (!VRInputManager::Instance().IsInitialized()) {
+				return;
+			}
+
+			matrix4 mat = matrix4(VRInputManager::Instance().GetTrackedPositions()[0].mDeviceToAbsoluteTracking) * VRInputManager::Instance().GetPlayerPosition();
 			mObject->GetTransform().SetMatrix(mat);
 		}
 
-};
+	};
+
+}

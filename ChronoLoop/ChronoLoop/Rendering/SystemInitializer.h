@@ -10,7 +10,7 @@
 #include "../Core/Pool.h"
 
 
-namespace RenderEngine {
+namespace Epoch {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
 												 bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane,
 												 vr::IVRSystem* _vrsys) {

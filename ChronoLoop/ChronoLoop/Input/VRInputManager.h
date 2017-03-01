@@ -2,6 +2,7 @@
 #include <openvr.h>
 #include "Controller.h"
 #include "../Common/Math.h"
+#include <utility>
 
 namespace Epoch {
 

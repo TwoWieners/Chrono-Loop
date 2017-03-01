@@ -1,9 +1,10 @@
 #include "FileIO_General.h"
 #include <fstream>
 
-namespace FileIO {
+namespace Epoch {
+	namespace IO {
 
-	bool LoadBytes(const char * _path, char **_bytes, int & _size) {
+		bool LoadBytes(const char * _path, char **_bytes, int & _size) {
 			std::ifstream load;
 			load.open(_path, std::ios_base::binary);
 			if (!load.is_open()) {
@@ -18,5 +19,6 @@ namespace FileIO {
 			load.read(*_bytes, _size);
 			load.close();
 			return true;
+		}
 	}
 }

@@ -1,6 +1,7 @@
 #include "Common.h"
 
-namespace Engine {
+
+namespace Epoch {
 
 	void MakeWide(const char* _in, wchar_t **_out, unsigned int _size) {
 		*_out = new wchar_t[_size];
