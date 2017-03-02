@@ -8,19 +8,16 @@ namespace Epoch {
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
-	Controller::Controller() {
-		mHairTriggerDelta = 0.1f; //trigger deadzone
-	}
+	Controller::Controller() {}
 
 	void Controller::Update() {
 		//update the contoller pose/state when called. 
 		mPrevState = mState;
-		if (mHmd != NULL) {
-			//SystemLogger::Deug() << "Controller update." << std::endl;
-			mValid = mHmd->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
-			if (mPrevState.ulButtonPressed != mState.ulButtonPressed) {
-				UpdateHairTrigger();
-			}
+		//SystemLogger::Deug() << "Controller update." << std::endl;
+		VRInputManager::Instance().
+		mValid = mHmd->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
+		if (mPrevState.ulButtonPressed != mState.ulButtonPressed) {
+			UpdateHairTrigger();
 		}
 	}
 
@@ -53,12 +50,9 @@ namespace Epoch {
 
 #pragma region Private Functions
 
-	void Controller::SetIndex(int _index) {
+	void Controller::Setup(int _index)
+	{
 		mIndex = _index;
-	}
-
-	void Controller::SetValid(bool _valid) {
-		mValid = _valid;
 	}
 
 #pragma endregion Private Functions

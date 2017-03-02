@@ -9,7 +9,6 @@ namespace Epoch {
 
 	class Controller {
 	private:
-		vr::IVRSystem* mHmd = nullptr;
 		int mIndex = -1;
 		bool mValid = false;
 		vr::VRControllerState_t mState, mPrevState;
@@ -17,11 +16,10 @@ namespace Epoch {
 
 		vr::ETrackingUniverseOrigin mTrackingSpace = vr::TrackingUniverseStanding;
 
-		float mHairTriggerDelta;
-		float mHairTriggerLimit; //trigger dead zone
+		float mHairTriggerDZ = 0.1f;
+		float mHairTriggerLimit;
 		bool mHairTriggerState, mHairTriggerPrevState;
-		void SetIndex(int index);
-		void SetValid(bool valid);
+		void Setup(int _index);
 
 		friend class VIM;
 	public:
@@ -30,7 +28,6 @@ namespace Epoch {
 		Controller();
 		~Controller() {};
 		void Update();
-		void SetUp(int _index, vr::IVRSystem* _vr);
 
 		//transforms
 		matrix4 GetPosition();

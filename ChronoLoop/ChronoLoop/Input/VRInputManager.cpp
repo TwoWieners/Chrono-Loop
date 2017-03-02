@@ -39,8 +39,13 @@ namespace Epoch {
 		int leftID = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand);
 		SystemLogger::Info() << "Right controller ID: " << rightID << std::endl;
 		SystemLogger::Info() << "Left controller ID:  " << leftID << std::endl;
-		mRightController.SetUp(rightID, mVRSystem);
-		mLeftController.SetUp(leftID, mVRSystem);
+		mPrimaryController.first = ControllerType::Primary;
+		mPrimaryController.second = Controller();
+		mPrimaryController.second.Setup(rightID);
+
+		mSecondaryController.first = ControllerType::Secondary;
+		mSecondaryController.second = Controller();
+		mSecondaryController.second.Setup(leftID);
 		mPlayerPosition = matrix4::CreateTranslation(2, -1, 8);
 	}
 	
@@ -48,7 +53,7 @@ namespace Epoch {
 	
 	void VIM::Update() {
 		if (mRightController.GetIndex() < 0) {
-			mRightController.SetIndex(mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand));
+			mRightController.mIndex = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand);
 			if (mRightController.GetIndex() > 0) {
 				mRightController.Update();
 				SystemLogger::Info() << "Right Controller connected at index " << mRightController.GetIndex() << std::endl;
@@ -57,7 +62,7 @@ namespace Epoch {
 			mRightController.Update();
 		}
 		if (mLeftController.GetIndex() < 0) {
-			mLeftController.SetIndex(mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand));
+			mLeftController.mIndex = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand);
 			if (mLeftController.GetIndex() > 0) {
 				mLeftController.Update();
 				SystemLogger::Info() << "Left Controller connected at index " << mLeftController.GetIndex() << std::endl;
@@ -69,17 +74,12 @@ namespace Epoch {
 	}
 	
 	
-	Controller& VIM::GetController(bool left) {
+	Controller& VIM::GetController(ControllerType _t) {
 		if (left) {
 			return mLeftController;
 		} else {
 			return mRightController;
 		}
-	}
-	
-	matrix4 VIM::GetPlayerWorldPos() {
-			matrix4 temp = (matrix4)(mPoses[0].mDeviceToAbsoluteTracking) * mPlayerPosition;
-			return temp;
 	}
 
 }

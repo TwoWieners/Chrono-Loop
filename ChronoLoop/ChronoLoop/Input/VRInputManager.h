@@ -6,16 +6,16 @@
 
 namespace Epoch {
 
-	enum ControllerType {
+	enum class ControllerType {
 		Primary = 0,
 		Secondary
 	};
 
-	typedef std::pair<ControllerType, vr::ETrackedControllerRole> ControllerMap;
+	typedef std::pair<ControllerType, Controller> ControllerMap;
 
 	class VIM {
-		Controller mRightController;
-		Controller mLeftController;
+		ControllerMap mPrimaryController;
+		ControllerMap mSecondaryController;
 		matrix4 mPlayerPosition;
 		vr::TrackedDevicePose_t mPoses[vr::k_unMaxTrackedDeviceCount];
 		vr::IVRSystem* mVRSystem;
@@ -26,12 +26,13 @@ namespace Epoch {
 		friend class VRInputManager;
 	public:
 		void Update();
-		Controller& GetController(bool left);
-		inline bool IsInitialized() const { return mVRSystem != nullptr; }
-		inline matrix4& GetPlayerPosition() { return mPlayerPosition; }
-		inline vr::TrackedDevicePose_t* GetTrackedPositions() { return mPoses; }
+		Controller& GetController(ControllerType _t);
 		inline unsigned int GetTrackedDeviceCount() { return vr::k_unMaxTrackedDeviceCount; }
-		matrix4 GetPlayerWorldPos();
+		inline vr::TrackedDevicePose_t* GetTrackedPositions() { return mPoses; }
+		inline matrix4& GetPlayerPosition() { return mPlayerPosition; }
+		inline matrix4 GetPlayerView() { return (matrix4)(mPoses[vr::k_unTrackedDeviceIndex_Hmd].mDeviceToAbsoluteTracking) * mPlayerPosition; }
+		inline bool IsVREnabled() const { return mVRSystem != nullptr; }
+		inline vr::IVRSystem* GetVRSystem() { return mVRSystem; }
 	};
 	
 	class VRInputManager {
