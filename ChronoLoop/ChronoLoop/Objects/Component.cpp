@@ -148,11 +148,6 @@ namespace Epoch {
 	}
 #pragma endregion
 	//------------------------------------------------------------
-
-	void Collider::Update() {}
-
-	void Collider::Destroy() {}
-
 	vec4f Collider::GetPos() {
 		return mObject->GetTransform().GetMatrix().fourth;
 	}
