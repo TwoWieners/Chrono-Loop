@@ -25,5 +25,4 @@ namespace Epoch {
 		void iAddObject(BaseObject* _obj);
 		void iClear();
 	};
-
 }

@@ -151,7 +151,7 @@ struct BoxSnapToControllerAction : public CodeComponent {
 		{
 			if (!mPickUp->mShouldMove){
 				mCollider->mHitting.erase(mPickUp);
-					return;
+				return;
 			}
 			mPickUp->SetPos((m).tiers[3]);
 			//mObject->GetTransform().SetMatrix(m);

@@ -15,6 +15,7 @@ namespace Epoch {
 		friend class SystemLogger;
 		SL(const char* _path);
 		~SL();
+
 	public:
 		SL& operator<<(const char i);
 		SL& operator<<(const short i);
@@ -43,13 +44,11 @@ namespace Epoch {
 
 	class SystemLogger {
 		static SL *Log;
-
 		SystemLogger();
 		std::ofstream output;
 		void PrintTime();
 
 	public:
-
 		inline static SL& GetLog() {
 			if (nullptr == Log) {
 				Log = new SL("Log.log");
@@ -99,4 +98,7 @@ namespace Epoch {
 		}
 	};
 
+
 }
+
+

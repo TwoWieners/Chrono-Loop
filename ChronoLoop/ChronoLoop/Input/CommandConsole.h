@@ -6,6 +6,7 @@
 
 namespace Epoch {
 
+
 	class CommandConsole;
 
 	typedef void(*Command)(void* self, std::wstring);//function pointer
@@ -26,6 +27,7 @@ namespace Epoch {
 		int mFps; //FPS display
 		float mFrameTime;
 
+		bool mIsVR;
 		//SystemLogger mLogger;
 	public:
 		CommandConsole();
@@ -33,8 +35,12 @@ namespace Epoch {
 		static CommandConsole& Instance();
 		static void DestroyInstance();
 
+		//Misc.
 		bool willTakeInput() { return mTakeInput; };
 		std::wstring GetCurrentCommmand() { return mCurCommand; };
+		bool isVRon() { return mIsVR; }
+		void SetVRBool(bool _set) { mIsVR = _set; }
+
 
 
 		void Update();
@@ -52,16 +58,13 @@ namespace Epoch {
 
 
 
-
-		//Function Pointer
+		void Toggle();
+		//Function Pointer / Console Commands
 		static void Help(void* _self, std::wstring _nothing);
 		static void ToggleFPS(void* _self, std::wstring _ifOn);
-		void Toggle();
-
+		static void ToggleAll(void* _self, std::wstring _ifOn);
+		void DisplayFPS();
+		//Threaded Function
 		void InputFunction();
-
-
-
 	};
-
 }

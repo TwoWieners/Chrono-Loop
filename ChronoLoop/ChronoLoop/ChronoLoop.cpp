@@ -274,7 +274,7 @@ void Update() {
 	CodeComponent* pickup = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 	RightController->AddComponent(pickup);
-	TimeManager::Instance()->AddObjectToTimeline(RightController);
+	TimeManager::Instance()->AddPlayerObjectToTimeline(RightController);
 
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
@@ -314,7 +314,7 @@ void Update() {
 	CodeComponent* pickup2 = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 	LeftController->AddComponent(pickup2);
-	TimeManager::Instance()->AddObjectToTimeline(LeftController);
+	TimeManager::Instance()->AddPlayerObjectToTimeline(LeftController);
 
 	//Sound Initializing---------------------------------------------------
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
@@ -331,6 +331,7 @@ void Update() {
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
 	aabbSound->Play();
+
 	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
 	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
@@ -338,6 +339,7 @@ void Update() {
 	HeadsetFollow* hfollow = new HeadsetFollow();
 	headset->AddComponent(hfollow);
 	headset->AddComponent(visibleMesh2);
+	TimeManager::Instance()->AddPlayerObjectToTimeline(headset);
 
 	Transform Door, Exit;
 	Door.SetMatrix(matrix4::CreateTranslation(0, 2, 0));
@@ -358,7 +360,7 @@ void Update() {
 	BlockDoor->AddComponent(doorCol);
 	TimeManager::Instance()->AddObjectToTimeline(BlockDoor);
 
-	TimeManager::Instance()->AddObjectToTimeline(headset);
+
 
 	Physics::Instance()->mObjects.push_back(PhysicsBox);
 	Physics::Instance()->mObjects.push_back(BlockDoor);

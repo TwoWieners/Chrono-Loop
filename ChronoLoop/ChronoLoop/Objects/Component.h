@@ -1,8 +1,8 @@
 #pragma once
 #include "..\Common\Math.h"
-#include "..\Rendering\Mesh.h"
+#include "../Physics/Physics.h"
+#include "../Rendering/Mesh.h"
 #include <unordered_map>
-#include "..\Physics\Physics.h"
 #include <unordered_set>
 
 namespace Epoch {
@@ -11,8 +11,7 @@ namespace Epoch {
 	class Transform;
 	//class Mesh;
 
-	enum ComponentType
-	{
+	enum ComponentType {
 		eCOMPONENT_UNKNOWN = 0,
 		eCOMPONENT_CODE,
 		eCOMPONENT_AUDIOEMITTER,
@@ -23,8 +22,7 @@ namespace Epoch {
 		eCOMPONENT_MAX
 	};
 
-	class Component
-	{
+	class Component {
 		friend class Physics;
 		friend class BaseObject;
 
@@ -55,21 +53,18 @@ namespace Epoch {
 		Transform& GetTransform() const;
 	};
 
-	class Listener : public Component
-	{
+	class Listener : public Component {
 	public:
 		Listener() : Component(ComponentType::eCOMPONENT_AUDIOLISTENER) {}
 		void Update() {}
 		void Destroy() {}
 	};
 
-	class Emitter :public Component
-	{
+	class Emitter :public Component {
 	public:
 		enum sfxTypes { ePlayLoop, ePauseLoop, eResumeLoop, eStopLoop, ePlaySFX };
 
-		Emitter() : Component(ComponentType::eCOMPONENT_AUDIOEMITTER)
-		{
+		Emitter() : Component(ComponentType::eCOMPONENT_AUDIOEMITTER) {
 			mIsPaused = mIsPlaying = false;
 		}
 
@@ -99,15 +94,15 @@ namespace Epoch {
 			eCOLLIDER_Controller
 		};
 
+		virtual void Update() {}
+		virtual void Destroy() {}
+
 		ColliderType mColliderType;
 		bool mShouldMove, mRewind;
 		vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity, mWeight, mDragForce;
 		float mMass, mElasticity, mKineticFriction, mStaticFriction, mInvMass, mRHO, mDrag, mArea;
 
-		void Update();
-		void Destroy();
-
-		vec4f AddForce(vec4f _force) { mShouldMove = true; mForces = _force; return mForces; };
+		vec4f AddForce(vec4f _force) { mForces = _force; return mForces; };
 		virtual vec4f GetPos();
 		virtual void SetPos(const vec4f& _newPos);
 	};
@@ -134,8 +129,7 @@ namespace Epoch {
 		virtual void SetPos(const vec4f& _newPos);
 	};
 
-	class OrientedCubeCollider : public Collider
-	{
+	class OrientedCubeCollider : public Collider {
 	public:
 		OrientedCubeCollider() {}
 		OrientedCubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _center, vec4f _xRadius, vec4f _yRadius, vec4f _zRadius, vec4f _xRotation, vec4f _yRotation, vec4f _zRotation);
@@ -150,16 +144,14 @@ namespace Epoch {
 		float mOffset;
 	};
 
-	class ButtonCollider : public CubeCollider
-	{
+	class ButtonCollider : public CubeCollider {
 	public:
 		ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float normForce, vec4f _pushNormal);
 		vec4f mPushNormal;
 		Plane mUpperBound, mLowerBound;
 	};
 
-	class ControllerCollider : public CubeCollider
-	{
+	class ControllerCollider : public CubeCollider {
 	public:
 		ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left);
 		bool mLeft;

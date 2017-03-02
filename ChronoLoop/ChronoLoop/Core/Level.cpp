@@ -108,9 +108,10 @@ namespace Epoch {
 		mController1->SetName(Controller1name);
 		mController2->SetName(Controller2name);
 
-		mObjectList.push_back(_headset);
-		mObjectList.push_back(_controller1);
-		mObjectList.push_back(_controller2);
+	////Add the headset and controllers to the time manager with their new ids
+	//TimeManager::Instance()->AddPlayerObjectToTimeline(mHeadset);
+	//TimeManager::Instance()->AddPlayerObjectToTimeline(mController1);
+	//TimeManager::Instance()->AddPlayerObjectToTimeline(mController2);
 
 		//Add the headset and controllers to the time manager with their new ids
 		TimeManager::Instance()->AddObjectToTimeline(mHeadset);
