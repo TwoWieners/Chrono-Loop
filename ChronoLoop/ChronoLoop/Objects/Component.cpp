@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "BaseObject.h"
 #include "..\Messager\Messager.h"
+#include "../Rendering/Mesh.h"
 
 namespace Epoch {
 
@@ -148,11 +149,6 @@ namespace Epoch {
 	}
 #pragma endregion
 	//------------------------------------------------------------
-
-	void Collider::Update() {}
-
-	void Collider::Destroy() {}
-
 	vec4f Collider::GetPos() {
 		return mObject->GetTransform().GetMatrix().fourth;
 	}

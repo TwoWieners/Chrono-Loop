@@ -31,9 +31,6 @@
     <Filter Include="Core\Header Files">
       <UniqueIdentifier>{4a4608d5-c13c-4309-8d3d-2898cc3b1219}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Source Files">
-      <UniqueIdentifier>{72f9a024-3f4f-4db5-a6de-460380b3b4f0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\Header Files">
       <UniqueIdentifier>{264e0f99-edf8-4b4a-bd07-a7c4ac29f8e4}</UniqueIdentifier>
     </Filter>
@@ -114,6 +111,9 @@
     </Filter>
     <Filter Include="Common\Math">
       <UniqueIdentifier>{33a90bf5-e8c9-4456-b11a-8aa44176c1a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Source Files">
+      <UniqueIdentifier>{72f9a024-3f4f-4db5-a6de-460380b3b4f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
