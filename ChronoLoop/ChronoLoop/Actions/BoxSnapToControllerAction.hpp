@@ -5,6 +5,8 @@
 #include "../Common/Logger.h"
 #include <unordered_set>
 
+using namespace Epoch;
+
 struct Bootleg {
 	struct Node {
 		vec2f data;
@@ -68,8 +70,8 @@ struct BoxSnapToControllerAction : public CodeComponent {
 
 	virtual void Update() override {
 
-		if (VRInputManager::Instance().iIsInitialized()) {
-			Controller &controller = VRInputManager::Instance().iGetController(mLeft);
+		if (VRInputManager::Instance().IsInitialized()) {
+			Controller &controller = VRInputManager::Instance().GetController(mLeft);
 			if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty()) {
 				SnapToController();
 			} else if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty()) {
@@ -114,7 +116,7 @@ struct BoxSnapToControllerAction : public CodeComponent {
 
 	virtual void SnapToController() {
 		mHeld = true;
-		matrix4 m = VRInputManager::Instance().iGetController(mLeft).GetPosition();
+		matrix4 m = VRInputManager::Instance().GetController(mLeft).GetPosition();
 
 		vec4f pos, setPos;
 		vec4f controllerPos = mCollider->GetPos();
@@ -161,7 +163,7 @@ struct BoxSnapToControllerAction : public CodeComponent {
 	}
 
 	virtual void ReleaseCube() {
-		vec4f force = VRInputManager::Instance().iGetController(mLeft).GetVelocity();
+		vec4f force = VRInputManager::Instance().GetController(mLeft).GetVelocity();
 		force[2] *= -1; // SteamVR seems to Assume +Z goes into the screen.
 		mPickUp->mVelocity = force;
 		mPickUp->mShouldMove = true;
