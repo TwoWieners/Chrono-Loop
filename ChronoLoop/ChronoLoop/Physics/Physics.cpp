@@ -33,7 +33,7 @@ namespace Epoch {
 		}
 	}
 
-	#pragma region RAY_CASTING
+#pragma region RAY_CASTING
 
 	bool Physics::RayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& _normal, vec4f& _start, vec4f& _dir, float& _time)
 	{
@@ -97,7 +97,7 @@ namespace Epoch {
 	{
 		vec4f d = _point2 - _point1;
 		vec4f od = _point1 - _point2;
-		vec4f m = _start - _point1; 
+		vec4f m = _start - _point1;
 
 		float dd = d * d;
 		float nd = _normal * d;
@@ -162,10 +162,10 @@ namespace Epoch {
 		return bReturn;
 	}
 
-	#pragma endregion
+#pragma endregion
 
 
-	#pragma region MOVING_SPHERE
+#pragma region MOVING_SPHERE
 
 	bool Physics::MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _vert2, vec4f & _normal, vec4f & _start, vec4f & _dir, float _radius, float & _time, vec4f & _outNormal)
 	{
@@ -226,8 +226,8 @@ namespace Epoch {
 		bool bCollision = false;
 		_time = FLT_MAX;
 		float fTime = FLT_MAX;
-	
-		for (unsigned int i = 0; i < _mesh->GetNumTriangles(); i++) 
+
+		for (unsigned int i = 0; i < _mesh->GetNumTriangles(); i++)
 		{
 			Triangle currTri = _mesh->GetTriangles()[i];
 			vec4f currNorm = _mesh->GetTriangles()[i].Normal;
@@ -247,10 +247,10 @@ namespace Epoch {
 		return bCollision;
 	}
 
-	#pragma endregion
+#pragma endregion
 
 
-	#pragma region PLANE_COLISION
+#pragma region PLANE_COLISION
 
 	void Physics::BuildPlane(Plane& _plane, vec4f& _pointA, vec4f& _pointB, vec4f& _pointC)
 	{
@@ -295,10 +295,10 @@ namespace Epoch {
 		return SphereToPlane(_plane, s);
 	}
 
-	#pragma endregion
+#pragma endregion
 
 
-	#pragma region FRUSTUM_COLLISION
+#pragma region FRUSTUM_COLLISION
 	/*
 	void Physics::BuildFrustum(Frustum& _frustum, float _fov, float _nearDist, float _farDist, float _ratio, matrix4& _camXform)
 	{
@@ -313,7 +313,7 @@ namespace Epoch {
 		_frustum.mPoints[3] = fc + _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
 		_frustum.mPoints[1] = fc - _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
 		_frustum.mPoints[2] = fc - _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
-			   
+
 		_frustum.mPoints[4] = nc + _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
 		_frustum.mPoints[5] = nc + _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
 		_frustum.mPoints[7] = nc - _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
@@ -359,10 +359,10 @@ namespace Epoch {
 		return false;
 	}
 	*/
-	#pragma endregion
+#pragma endregion
 
 
-	#pragma region MISC_COLLISION
+#pragma region MISC_COLLISION
 
 	bool Physics::AABBtoAABB(AABB& _aabb1, AABB& _aabb2)
 	{
@@ -493,9 +493,9 @@ namespace Epoch {
 		return false;
 	}
 
-	#pragma endregion
+#pragma endregion
 
-	#pragma region SIMULATION
+#pragma region SIMULATION
 
 	vec4f Physics::CalcAcceleration(vec4f& _force, float _mass)
 	{
@@ -538,7 +538,7 @@ namespace Epoch {
 	void Physics::CalcFriction(Collider& _col, Collider& _other)
 	{
 		PlaneCollider* plane = ((PlaneCollider*)&_other);
-		vec4f tangentForce = _col.mForces - ( plane->mNormal * (_col.mForces * plane->mNormal));
+		vec4f tangentForce = _col.mForces - (plane->mNormal * (_col.mForces * plane->mNormal));
 		float staticFriction = 0;
 		float avgStatic = _col.mStaticFriction < _other.mStaticFriction ? _other.mStaticFriction : _col.mStaticFriction;
 		float avgKinetic = _col.mKineticFriction < _other.mKineticFriction ? _other.mKineticFriction : _col.mKineticFriction;
@@ -558,13 +558,13 @@ namespace Epoch {
 			staticFriction = avgStatic * (-_col.mWeight).Magnitude3();
 			_col.mTotalForce = { 0,0,0,0 };
 		}
-		else if(_col.mVelocity.Magnitude3() > 0)
+		else if (_col.mVelocity.Magnitude3() > 0)
 		{
 			//vec4f normDir(fabsf(_col.mVelocity.Normalize().x), fabsf(_col.mVelocity.Normalize().y), fabs(_col.mVelocity.Normalize().z), 1);
 			vec4f totalFriction = _col.mVelocity.Normalize() * (-avgKinetic * (-_col.mWeight).Magnitude3());
 			_col.mTotalForce = _col.mForces + totalFriction + _col.mDragForce;
 		}
-	
+
 		if (fabsf(_col.mVelocity.Magnitude3()) < 0.001f && tangentForce.Magnitude3() >= staticFriction)
 		{
 			float sliding = tangentForce.Magnitude3() / staticFriction;
@@ -574,7 +574,7 @@ namespace Epoch {
 		}
 	}
 
-	#pragma endregion
+#pragma endregion
 
 	void Physics::Update(float _time)
 	{
@@ -582,7 +582,7 @@ namespace Epoch {
 		Collider* collider;
 		Collider* otherCol;
 		vec4f norm;
-	
+
 		int objs = (int)mObjects.size();
 		for (int i = 0; i < objs; ++i)
 		{
@@ -784,19 +784,48 @@ namespace Epoch {
 				}
 				else if (collider->mColliderType == Collider::eCOLLIDER_Controller)//Update ControllerCollider position, do not apply physics to player
 				{
+					AABB aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
+					for (int j = 0; j < objs; ++j)
+					{
+						if (mObjects[j] != mObjects[i])
+						{
+							int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
+							for (int k = 0; k < othercols; ++k)
+							{
+								otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
+								if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Cube)
+								{
+									AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+									if (AABBtoAABB(aabb1, aabb2))
+										((ControllerCollider*)collider)->mHitting.insert(otherCol);
+									else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
+										((ControllerCollider*)collider)->mHitting.erase(otherCol);
+								}
+								else if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
+								{
+									Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+									if (SphereToAABB(s1, aabb1))
+										((ControllerCollider*)collider)->mHitting.insert(otherCol);
+									else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
+										((ControllerCollider*)collider)->mHitting.erase(otherCol);
+								}
+							}
+						}
+					}
+
 					if (((ControllerCollider*)collider)->mLeft)
 					{
 						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = VRInputManager::Instance().GetController(true).GetVelocity();
-						collider->SetPos(VRInputManager::Instance().GetController(true).GetPosition().tiers[3]);
+						collider->mVelocity = VRInputManager::Instance().iGetController(true).GetVelocity();
+						collider->SetPos(VRInputManager::Instance().iGetController(true).GetPosition().tiers[3]);
 					}
 					else
 					{
 						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = VRInputManager::Instance().GetController(false).GetVelocity();
-						collider->SetPos(VRInputManager::Instance().GetController(false).GetPosition().tiers[3]);
+						collider->mVelocity = VRInputManager::Instance().iGetController(false).GetVelocity();
+						collider->SetPos(VRInputManager::Instance().iGetController(false).GetPosition().tiers[3]);
 					}
 				}
 
@@ -821,4 +850,4 @@ namespace Epoch {
 		}
 	}
 
-} // Epoch Namespace
+}

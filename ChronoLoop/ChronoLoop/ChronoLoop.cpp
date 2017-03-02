@@ -176,10 +176,10 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox2);
 
 	Transform SphereTransform;
-	matrix4 SphereMat = matrix4::CreateScale(0.15f, 0.15f, 0.15f) * matrix4::CreateTranslation(5, 5, 4);
+	matrix4 SphereMat = matrix4::CreateScale(0.15f, 0.15f, 0.15f) * matrix4::CreateTranslation(3, 5, 0);
 	SphereTransform.SetMatrix(SphereMat);
 	BaseObject* PhysicsSphere = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform);
-	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.7f, 0.2f, 0.1f, 0.03f, 0.15f);
+	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.1f, 0.2f, 0.1f, 0.03f, 0.15f);
 	BallCollider->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollision2 = new CCElasticReactionWithPlane;
 	CodeComponent* SpheretoSphere = new CCElasticSphereToSphere;
@@ -258,7 +258,7 @@ void Update() {
 	walls->AddComponent(DividerWall);
 	walls->AddComponent(wallMesh);
 
-	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller", identity);// new BaseObject("Controller", identity);
+	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	rightRaycaster->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
@@ -271,31 +271,26 @@ void Update() {
 	RightController->AddComponent(ta);
 	RightController->AddComponent(rightConCol);
 	RightController->AddComponent(tm);
+	CodeComponent* pickup = new BoxSnapToControllerAction();
+	((BoxSnapToControllerAction*)pickup)->mLeft = false;
+	RightController->AddComponent(pickup);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	PhysicsBox->AddComponent(visibleMesh);
-	//CodeComponent *codeComponent = new BoxSnapToControllerAction();
-	//PhysicsBox->AddComponent(codeComponent);
 
 	MeshComponent *visibleMeshBox = new MeshComponent("../Resources/Cube.obj");
 	visibleMeshBox->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	PhysicsBox2->AddComponent(visibleMeshBox);
-	//CodeComponent *codeComponent = new BoxSnapToControllerAction();
-	//PhysicsBox->AddComponent(codeComponent);
 
 	MeshComponent *sphereMesh = new MeshComponent("../Resources/Sphere.obj");
 	sphereMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	PhysicsSphere->AddComponent(sphereMesh);
-	CodeComponent *codeComponent2 = new BoxSnapToControllerAction();
-	PhysicsSphere->AddComponent(codeComponent2);
 
 	MeshComponent *sphereMesh2 = new MeshComponent("../Resources/Sphere.obj");
 	sphereMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	PhysicsSphere2->AddComponent(sphereMesh2);
-	//CodeComponent *codeComponent3 = new BoxSnapToControllerAction();
-	//PhysicsSphere->AddComponent(codeComponent3);
 
 	MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
 	ButtonMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
@@ -303,7 +298,7 @@ void Update() {
 	Button->AddComponent(ButtonMesh);
 
 	//pat added
-	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2", identity); //new BaseObject("Controller2", identity);
+	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("LController", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	leftRaycaster->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
@@ -316,6 +311,9 @@ void Update() {
 	LeftController->AddComponent(mc2);
 	LeftController->AddComponent(ta2);
 	LeftController->AddComponent(tm2);
+	CodeComponent* pickup2 = new BoxSnapToControllerAction();
+	((BoxSnapToControllerAction*)pickup2)->mLeft = true;
+	LeftController->AddComponent(pickup2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
 	//Sound Initializing---------------------------------------------------
@@ -363,6 +361,8 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
 	Physics::Instance()->mObjects.push_back(PhysicsBox);
+	Physics::Instance()->mObjects.push_back(BlockDoor);
+	Physics::Instance()->mObjects.push_back(ExitWall);
 	Physics::Instance()->mObjects.push_back(PhysicsBox2);
 	Physics::Instance()->mObjects.push_back(PhysicsSphere);
 	Physics::Instance()->mObjects.push_back(PhysicsSphere2);

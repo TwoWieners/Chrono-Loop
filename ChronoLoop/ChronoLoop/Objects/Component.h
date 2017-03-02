@@ -3,6 +3,7 @@
 #include "..\Rendering\Mesh.h"
 #include <unordered_map>
 #include "..\Physics\Physics.h"
+#include <unordered_set>
 
 namespace Epoch {
 
@@ -78,7 +79,7 @@ namespace Epoch {
 		void PlaySFX(int _id = 0);
 		void PlaySFX(int _id = 0, const vec4f* _pos = new vec4f());
 		void AddSoundEvent(sfxTypes _type, int64_t _event);
-	
+
 		void Update();
 		void Destroy();
 	private:
@@ -162,6 +163,7 @@ namespace Epoch {
 	public:
 		ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left);
 		bool mLeft;
+		std::unordered_set<Collider*> mHitting;
 	};
 
 	/*
