@@ -6,19 +6,18 @@
 
 namespace Epoch {
 
-	enum class ControllerType {
-		Primary = 0,
-		Secondary
+	enum ControllerType {
+		eControllerType_Primary = 0,
+		eControllerType_Secondary
 	};
 
-	typedef std::pair<ControllerType, Controller> ControllerMap;
-
 	class VIM {
-		ControllerMap mPrimaryController;
-		ControllerMap mSecondaryController;
+		Controller mLeftController;
+		Controller mRightController;
 		matrix4 mPlayerPosition;
 		vr::TrackedDevicePose_t mPoses[vr::k_unMaxTrackedDeviceCount];
 		vr::IVRSystem* mVRSystem;
+		bool mIsLeftPrimary = false;
 		
 		VIM(vr::IVRSystem* _vr);
 		~VIM();
@@ -42,19 +41,9 @@ namespace Epoch {
 		VRInputManager();
 		~VRInputManager();
 	public:
-		static VIM& Instance();
-		static VIM& Initialize(vr::IVRSystem* _vr);
-		static void Shutdown();
+		static VIM& GetInstance();
+		static void Initialize(vr::IVRSystem* _vr);
+		static void DestroyInstance();
 	};
 
-}
-
-namespace std {
-	template <>
-	class hash<Epoch::ControllerMap> {
-	public:
-		size_t operator()(const Epoch::ControllerMap& contint) {
-			return hash<int>()(contint.first);
-		}
-	};
 }

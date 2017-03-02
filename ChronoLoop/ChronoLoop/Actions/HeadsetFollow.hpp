@@ -12,11 +12,11 @@ namespace Epoch {
 	public:
 
 		virtual void Update() {
-			if (!VRInputManager::Instance().IsInitialized()) {
+			if (!VRInputManager::GetInstance().IsVREnabled()) {
 				return;
 			}
 
-			matrix4 mat = matrix4(VRInputManager::Instance().GetTrackedPositions()[0].mDeviceToAbsoluteTracking) * VRInputManager::Instance().GetPlayerPosition();
+			matrix4 mat = matrix4(VRInputManager::GetInstance().GetTrackedPositions()[0].mDeviceToAbsoluteTracking) * VRInputManager::GetInstance().GetPlayerPosition();
 			mObject->GetTransform().SetMatrix(mat);
 		}
 

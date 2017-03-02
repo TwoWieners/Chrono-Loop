@@ -19,10 +19,7 @@ namespace Epoch {
 		TimeManager::Instance();
 		InputLayoutManager::Instance();
 		TextureManager::Instance();
-		if (_vrsys) {
-			VRInputManager::Instance();
-			VRInputManager::Initialize(_vrsys);
-		}
+		VRInputManager::Initialize(_vrsys);
 		ShaderManager::Instance();
 		Pool::Initialize();
 		Physics::Instance();
@@ -30,15 +27,15 @@ namespace Epoch {
 	}
 
 	bool ShutdownSystems() {
+		Physics::Destroy();
+		Pool::DestroyInstance();
 		ShaderManager::DestroyInstance();
-		VRInputManager::Shutdown();
+		VRInputManager::DestroyInstance();
 		TextureManager::DestroyInstance();
 		InputLayoutManager::DestroyInstance();
 		TimeManager::Destroy();
 		RasterizerStateManager::DestroyInstance();
 		Renderer::DestroyInstance();
-		Pool::DestroyInstance();
-		Physics::Destroy();
 		return true;
 	}
 }

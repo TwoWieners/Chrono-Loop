@@ -263,8 +263,8 @@ void Update() {
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	rightRaycaster->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-	TeleportAction *ta = new TeleportAction(false);
-	TimeManipulation* tm = new TimeManipulation(false);
+	TeleportAction *ta = new TeleportAction(eControllerType_Primary);
+	TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);
@@ -272,7 +272,7 @@ void Update() {
 	RightController->AddComponent(rightConCol);
 	RightController->AddComponent(tm);
 	CodeComponent* pickup = new BoxSnapToControllerAction();
-	((BoxSnapToControllerAction*)pickup)->mLeft = false;
+	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 	RightController->AddComponent(pickup);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
@@ -303,8 +303,8 @@ void Update() {
 	MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	leftRaycaster->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-	TeleportAction *ta2 = new TeleportAction(true);
-	TimeManipulation* tm2 = new TimeManipulation(true);
+	TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
+	TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(leftRaycaster);
@@ -312,7 +312,7 @@ void Update() {
 	LeftController->AddComponent(ta2);
 	LeftController->AddComponent(tm2);
 	CodeComponent* pickup2 = new BoxSnapToControllerAction();
-	((BoxSnapToControllerAction*)pickup2)->mLeft = true;
+	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 	LeftController->AddComponent(pickup2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
@@ -408,7 +408,7 @@ void Update() {
 
 	//*////////////////////////////////////////////////////////////////////
 	if (VREnabled) {
-		VRInputManager::Instance().Update();
+		VRInputManager::GetInstance().Update();
 	}
 	
 	UpdateTime();
@@ -440,7 +440,7 @@ void Update() {
 			}
 
 			if (VREnabled) {
-				VRInputManager::Instance().Update();
+				VRInputManager::GetInstance().Update();
 			}
 		}
 	}

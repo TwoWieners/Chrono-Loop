@@ -50,13 +50,13 @@ namespace Epoch {
 		//	//((MeshComponent*)BaseObject::GetObjectByName("plane")->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture(textureName.c_str(), eTEX_CUSTOM1);
 		//	mTexturedApplied = true;
 		//}
-		if (Epoch::VRInputManager::Instance().GetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
+		if (Epoch::VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
 			int frameRewind = 30;
 
 			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
 				return;
 
-			SystemLogger::Debug() << "A clone is being made, please hold: " << mCloneCount << " | Is left: " << mLeft << std::endl;
+			SystemLogger::Debug() << "A clone is being made, please hold: " << mCloneCount << " | Controller Role: " << mControllerRole << std::endl;
 
 			Transform identity;
 
@@ -88,7 +88,7 @@ namespace Epoch {
 			TimeManager::Instance()->AddObjectToTimeline(Controller2);
 			mCloneCount++;
 		}
-		if (Epoch::VRInputManager::Instance().GetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
+		if (Epoch::VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
 			Level* CurLev = Level::Instance();
 			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - 30, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID());
 		}

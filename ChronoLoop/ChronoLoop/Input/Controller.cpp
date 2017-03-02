@@ -14,8 +14,7 @@ namespace Epoch {
 		//update the contoller pose/state when called. 
 		mPrevState = mState;
 		//SystemLogger::Deug() << "Controller update." << std::endl;
-		VRInputManager::Instance().
-		mValid = mHmd->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
+		mValid = VRInputManager::GetInstance().GetVRSystem()->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
 		if (mPrevState.ulButtonPressed != mState.ulButtonPressed) {
 			UpdateHairTrigger();
 		}
@@ -25,10 +24,10 @@ namespace Epoch {
 		mHairTriggerPrevState = mHairTriggerState;
 		float value = mState.rAxis[vr::k_eControllerAxis_Trigger].x;
 		if (mHairTriggerState)
-			if (value < mHairTriggerLimit - mHairTriggerDelta || value <= 0.0f)
+			if (value < mHairTriggerLimit - mHairTriggerDZ || value <= 0.0f)
 				mHairTriggerState = false;
 			else
-				if (value > mHairTriggerLimit + mHairTriggerDelta || value >= 1.0f)
+				if (value > mHairTriggerLimit + mHairTriggerDZ || value >= 1.0f)
 					mHairTriggerState = true;
 
 		mHairTriggerLimit = mHairTriggerState ? MAX(mHairTriggerLimit, value) : MIN(mHairTriggerLimit, value);
@@ -42,10 +41,8 @@ namespace Epoch {
 	}
 
 	void Controller::TriggerHapticPulse(int duration_micro_sec, vr::EVRButtonId buttonId) {
-		if (mHmd != NULL) {
 			int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
-			mHmd->TriggerHapticPulse(mIndex, axisId, (char)duration_micro_sec);
-		}
+			VRInputManager::GetInstance().GetVRSystem()->TriggerHapticPulse(mIndex, axisId, (char)duration_micro_sec);
 	}
 
 #pragma region Private Functions
@@ -59,15 +56,9 @@ namespace Epoch {
 
 #pragma region Public Functions
 
-	void Controller::SetUp(int _index, vr::IVRSystem *_vr) {
-		mIndex = _index;
-		mHmd = _vr;
-		Update();
-	}
-
 	matrix4 Controller::GetPosition() {
 		if (GetValid()) {
-			return matrix4(VRInputManager::Instance().GetTrackedPositions()[GetIndex()].mDeviceToAbsoluteTracking) * VRInputManager::Instance().GetPlayerPosition();
+			return matrix4(VRInputManager::GetInstance().GetTrackedPositions()[GetIndex()].mDeviceToAbsoluteTracking) * VRInputManager::GetInstance().GetPlayerPosition();
 		} else {
 			return matrix4();
 		}

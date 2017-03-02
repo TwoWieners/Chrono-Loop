@@ -68,9 +68,9 @@
 		}
 
 		void Renderer::GetMVP(vr::EVREye e, ViewProjectionBuffer &data) {
-			matrix4 hmd = Epoch::VRInputManager::Instance().GetTrackedPositions()[0].mDeviceToAbsoluteTracking;
+			matrix4 hmd = Epoch::VRInputManager::GetInstance().GetTrackedPositions()[0].mDeviceToAbsoluteTracking;
 
-			matrix4 hmdPos = (hmd * Epoch::VRInputManager::Instance().GetPlayerPosition()).Invert();
+			matrix4 hmdPos = (hmd * Epoch::VRInputManager::GetInstance().GetPlayerPosition()).Invert();
 			if (e == vr::EVREye::Eye_Left) {
 				data.view = (hmdPos * mEyePosLeft).Transpose();
 				data.projection = mEyeProjLeft;

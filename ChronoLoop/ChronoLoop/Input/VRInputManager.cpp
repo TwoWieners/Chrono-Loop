@@ -6,18 +6,20 @@ namespace Epoch {
 
 	VIM* VRInputManager::sInstance = nullptr;
 	
-	VIM& VRInputManager::Instance() {
+	VIM& VRInputManager::GetInstance() {
 		return *sInstance;
 	}
 	
-	VIM& VRInputManager::Initialize(vr::IVRSystem * _vr) {
+	void VRInputManager::Initialize(vr::IVRSystem * _vr) {
 		if (nullptr == sInstance) {
+			if (nullptr == _vr) {
+				SystemLogger::Debug() << "No valid VR system was found, VR will be disabled." << std::endl;
+			}
 			sInstance = new VIM(_vr);
 		}
-		return *sInstance;
 	}
 	
-	void VRInputManager::Shutdown() {
+	void VRInputManager::DestroyInstance() {
 		if (nullptr != sInstance) {
 			delete sInstance;
 			sInstance = nullptr;
@@ -27,8 +29,10 @@ namespace Epoch {
 	VRInputManager::VRInputManager() {}
 	
 	VRInputManager::~VRInputManager() {}
-	
-	
+
+
+
+
 	VIM::VIM(vr::IVRSystem *_vr) {
 		if (nullptr == _vr) {
 			SystemLogger::Warn() << "VR Input is disabled." << std::endl;
@@ -39,18 +43,13 @@ namespace Epoch {
 		int leftID = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand);
 		SystemLogger::Info() << "Right controller ID: " << rightID << std::endl;
 		SystemLogger::Info() << "Left controller ID:  " << leftID << std::endl;
-		mPrimaryController.first = ControllerType::Primary;
-		mPrimaryController.second = Controller();
-		mPrimaryController.second.Setup(rightID);
-
-		mSecondaryController.first = ControllerType::Secondary;
-		mSecondaryController.second = Controller();
-		mSecondaryController.second.Setup(leftID);
+		mRightController.Setup(rightID);
+		mLeftController.Setup(leftID);
 		mPlayerPosition = matrix4::CreateTranslation(2, -1, 8);
 	}
-	
+
 	VIM::~VIM() {}
-	
+
 	void VIM::Update() {
 		if (mRightController.GetIndex() < 0) {
 			mRightController.mIndex = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand);
@@ -72,13 +71,12 @@ namespace Epoch {
 		}
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 	}
-	
-	
+
 	Controller& VIM::GetController(ControllerType _t) {
-		if (left) {
-			return mLeftController;
+		if (mIsLeftPrimary) {
+			return _t == eControllerType_Primary ? mLeftController : mRightController;
 		} else {
-			return mRightController;
+			return _t == eControllerType_Primary ? mRightController : mLeftController;
 		}
 	}
 

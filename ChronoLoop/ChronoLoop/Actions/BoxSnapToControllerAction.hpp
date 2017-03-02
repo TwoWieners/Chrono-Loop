@@ -58,7 +58,7 @@ struct Bootleg {
 };
 
 struct BoxSnapToControllerAction : public CodeComponent {
-	bool mLeft = false;
+	ControllerType mControllerRole = eControllerType_Primary;
 	bool mHeld = false;
 	Bootleg mBootleg;
 	ControllerCollider* mCollider;
@@ -70,8 +70,8 @@ struct BoxSnapToControllerAction : public CodeComponent {
 
 	virtual void Update() override {
 
-		if (VRInputManager::Instance().IsInitialized()) {
-			Controller &controller = VRInputManager::Instance().GetController(mLeft);
+		if (VRInputManager::GetInstance().IsVREnabled()) {
+			Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
 			if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty()) {
 				SnapToController();
 			} else if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty()) {
@@ -116,7 +116,7 @@ struct BoxSnapToControllerAction : public CodeComponent {
 
 	virtual void SnapToController() {
 		mHeld = true;
-		matrix4 m = VRInputManager::Instance().GetController(mLeft).GetPosition();
+		matrix4 m = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 
 		vec4f pos, setPos;
 		vec4f controllerPos = mCollider->GetPos();
@@ -163,7 +163,7 @@ struct BoxSnapToControllerAction : public CodeComponent {
 	}
 
 	virtual void ReleaseCube() {
-		vec4f force = VRInputManager::Instance().GetController(mLeft).GetVelocity();
+		vec4f force = VRInputManager::GetInstance().GetController(mControllerRole).GetVelocity();
 		force[2] *= -1; // SteamVR seems to Assume +Z goes into the screen.
 		mPickUp->mVelocity = force;
 		mPickUp->mShouldMove = true;

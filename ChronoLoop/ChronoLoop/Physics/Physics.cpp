@@ -817,15 +817,15 @@ namespace Epoch {
 					{
 						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = VRInputManager::Instance().GetController(true).GetVelocity();
-						collider->SetPos(VRInputManager::Instance().GetController(true).GetPosition().tiers[3]);
+						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetVelocity();
+						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition().rows[3]);
 					}
 					else
 					{
 						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = VRInputManager::Instance().GetController(false).GetVelocity();
-						collider->SetPos(VRInputManager::Instance().GetController(false).GetPosition().tiers[3]);
+						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Primary).GetVelocity();
+						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition().rows[3]);
 					}
 				}
 

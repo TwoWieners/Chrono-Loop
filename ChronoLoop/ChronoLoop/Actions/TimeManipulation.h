@@ -9,7 +9,7 @@ namespace Epoch {
 
 	struct TimeManipulation : public CodeComponent {
 	private:
-		bool mLeft;
+		ControllerType mControllerRole = eControllerType_Primary;
 		int mCount = 0;
 		bool mTexturedApplied = false;
 		static unsigned int mCloneCount;
@@ -18,7 +18,7 @@ namespace Epoch {
 
 	public:
 		TimeManipulation();
-		TimeManipulation(bool _left) { mLeft = _left; };
+		TimeManipulation(ControllerType _t) : mControllerRole(_t) {}
 		~TimeManipulation();
 		void Start();
 		void Update();
