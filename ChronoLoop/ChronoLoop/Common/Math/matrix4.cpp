@@ -37,7 +37,7 @@ namespace Epoch {
 		rows[0].Set(_m.m[0][0], _m.m[1][0], _m.m[2][0], 0.0f);
 		rows[1].Set(_m.m[0][1], _m.m[1][1], _m.m[2][1], 0.0f);
 		rows[2].Set(_m.m[0][2], _m.m[1][2], _m.m[2][2], 0.0f);
-		rows[3].Set(_m.m[0][3], _m.m[1][3], _m.m[2][3], 0.0f);
+		rows[3].Set(_m.m[0][3], _m.m[1][3], _m.m[2][3], 1.0f);
 	}
 
 	bool matrix4::operator==(matrix4 const& _other) {

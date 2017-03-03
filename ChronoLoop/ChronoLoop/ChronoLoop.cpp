@@ -34,6 +34,7 @@
 #include <crtdbg.h>
 #include "Actions/TimeManipulation.h"
 
+using namespace Epoch;
 
 #define CONSOLE_OVERRIDE 1
 #define FIXED_UPDATE_INTERVAL (1 / 120.0f)
@@ -62,7 +63,6 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
 void UpdateTime();
 
-using namespace Epoch;
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -77,7 +77,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	vr::IVRSystem *vrsys = nullptr;
 	vrsys = vr::VR_Init(&pError, vr::VRApplication_Scene);
 	if (pError != vr::HmdError::VRInitError_None) {
-		SystemLogger::Error() << "Could not initialize OpenVR for reasons!" << std::endl;
+		SystemLogger::GetLog() << "Could not initialize OpenVR for reasons!" << std::endl;
 	}
 
 	if (vrsys != nullptr) {
@@ -139,7 +139,7 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 
 	Transform transform;
-	matrix4 mat1 = matrix4::CreateTranslation(0, 5, 0);
+	matrix4 mat1 = matrix4::CreateTranslation(1, 4, 0);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
 	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.3f, 0.2f, 0.1f, 0.1f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
@@ -161,7 +161,7 @@ void Update() {
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
 
 	Transform transformBox;
-	matrix4 matBox = matrix4::CreateTranslation(1, 5, 0);
+	matrix4 matBox = matrix4::CreateTranslation(2, 4, 0);
 	transformBox.SetMatrix(matBox);
 	BaseObject* PhysicsBox2 = Pool::Instance()->iGetObject()->Reset("aabb2", transformBox);//new BaseObject("aabb", transform);
 	CubeCollider *BoxCollider2 = new CubeCollider(PhysicsBox2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.3f, 0.2f, 0.1f, 0.1f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
@@ -176,7 +176,8 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox2);
 
 	Transform SphereTransform;
-	matrix4 SphereMat = matrix4::CreateScale(0.15f, 0.15f, 0.15f) * matrix4::CreateTranslation(3, 5, 0);
+	matrix4 SphereMat = matrix4::CreateScale(0.15f, 0.15f, 0.15f);
+	SphereMat *= matrix4::CreateTranslation(3, 4, 0);
 	SphereTransform.SetMatrix(SphereMat);
 	BaseObject* PhysicsSphere = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform);
 	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.5f, 0.2f, 0.1f, 0.03f, 0.15f);
@@ -192,7 +193,7 @@ void Update() {
 
 	Transform SphereTransform2;
 	matrix4 SphereMat2 = matrix4::CreateScale(0.15f, 0.15f, 0.15f);
-	SphereMat2 *= matrix4::CreateTranslation(3, 5, 0);
+	SphereMat2 *= matrix4::CreateTranslation(4, 4, 0);
 	SphereTransform2.SetMatrix(SphereMat2);
 	BaseObject* PhysicsSphere2 = Pool::Instance()->iGetObject()->Reset("sphere2", SphereTransform2);
 	SphereCollider *BallCollider2 = new SphereCollider(PhysicsSphere2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.5f, 0.2f, 0.1f, 0.03f, 0.15f);
@@ -210,7 +211,7 @@ void Update() {
 	matrix4 ButtonMat = matrix4::CreateTranslation(-3, 0, 0);
 	ButtonTransform.SetMatrix(ButtonMat);
 	BaseObject* Button = new BaseObject("button", ButtonTransform);
-	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0,1,0,0));
+	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0, 1, 0, 0));
 	CodeComponent* ButtonCollision = new CCButtonPress;
 	Button->AddComponent(ButtonCol);
 	Button->AddComponent(ButtonCollision);
@@ -219,30 +220,30 @@ void Update() {
 	Transform PlaneTransform;
 	PlaneTransform.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
 	BaseObject* Floor = Pool::Instance()->iGetObject()->Reset("plane", PlaneTransform);// new BaseObject("plane", PlaneTransform);
-	PlaneCollider* plane = new PlaneCollider(Floor, false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.1f, 0.8f, 0.7f, 0.1f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	PlaneCollider* plane = new PlaneCollider(Floor, false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.1f, 0.8f, 0.7f, 0.1f, -1.0f, vec4f(0.0f, 1.0f, 0.0f, 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
 	planeObj->AddTexture("../Resources/floorg.png", eTEX_DIFFUSE);
 	Floor->AddComponent(plane);
 	Floor->AddComponent(planeObj);
-	
+
 	Transform identity;
 
 	BaseObject* walls = Pool::Instance()->iGetObject()->Reset("walls", PlaneTransform);// new BaseObject("walls", PlaneTransform);
 	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
 	wallMesh->AddTexture("../Resources/Wallg.png", eTEX_DIFFUSE);
-	CubeCollider* ButtonRoomBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.034f, -1, -8, 1), vec4f(1.011f, 5, -7.026f, 1));
-	CubeCollider* ExitLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.985f, -1, -9.008f, 1), vec4f(1.011f, 5, -7.026f, 1));
-	CubeCollider* ExitBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.985f, -1, -10.008f, 1), vec4f(3.112f, 5, -9.008f, 1));
-	CubeCollider* ExitRightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.112f, -1, -9.008f, 1), vec4f(4.112f, 5, -6.991f, 1));
-	CubeCollider* MainBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(4.112f, -1, -7.991f, 1), vec4f(7.036f, 5, -6.991f, 1));
-	CubeCollider* RightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(7.036f, -1, -6.991f, 1), vec4f(8.036f, 5, 7.142f, 1));
-	CubeCollider* MainFrontWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.063f, -1, 7.142f, 1), vec4f(8.036f, 5, 8.142f, 1));
-	CubeCollider* EnterRightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.063f, -1, 7.142f, 1), vec4f(4.063f, 5, 9.055f, 1));
-	CubeCollider* EnterBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.918f, -1, 9.055f, 1), vec4f(4.063f, 5, 10.055f, 1));
-	CubeCollider* EnterLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.918f, -1, 7.014f, 1), vec4f(0.918f, 5, 9.055f, 1));
-	CubeCollider* ButtonRoomFrontWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.054f, -1, 7.014f, 1), vec4f(0.918f, 5, 8.014f, 1));
-	CubeCollider* LeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-8.054f, -1, -7.014f, 1), vec4f(-7.054f, 5, 7.014f, 1));
-	CubeCollider* DividerWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-1.273f, -1, -7.022f, 1), vec4f(-0.871f, 5, 3.125f, 1));
+	CubeCollider* ButtonRoomBackWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.034f, -1, -8, 1), vec4f(1.011f, 5, -7.026f, 1));
+	CubeCollider* ExitLeftWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.985f, -1, -9.008f, 1), vec4f(1.011f, 5, -7.026f, 1));
+	CubeCollider* ExitBackWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.985f, -1, -10.008f, 1), vec4f(3.112f, 5, -9.008f, 1));
+	CubeCollider* ExitRightWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.112f, -1, -9.008f, 1), vec4f(4.112f, 5, -6.991f, 1));
+	CubeCollider* MainBackWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(4.112f, -1, -7.991f, 1), vec4f(7.036f, 5, -6.991f, 1));
+	CubeCollider* RightWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(7.036f, -1, -6.991f, 1), vec4f(8.036f, 5, 7.142f, 1));
+	CubeCollider* MainFrontWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.063f, -1, 7.142f, 1), vec4f(8.036f, 5, 8.142f, 1));
+	CubeCollider* EnterRightWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.063f, -1, 7.142f, 1), vec4f(4.063f, 5, 9.055f, 1));
+	CubeCollider* EnterBackWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.918f, -1, 9.055f, 1), vec4f(4.063f, 5, 10.055f, 1));
+	CubeCollider* EnterLeftWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.918f, -1, 7.014f, 1), vec4f(0.918f, 5, 9.055f, 1));
+	CubeCollider* ButtonRoomFrontWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.054f, -1, 7.014f, 1), vec4f(0.918f, 5, 8.014f, 1));
+	CubeCollider* LeftWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-8.054f, -1, -7.014f, 1), vec4f(-7.054f, 5, 7.014f, 1));
+	CubeCollider* DividerWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-1.273f, -1, -7.022f, 1), vec4f(-0.871f, 5, 3.125f, 1));
 	walls->AddComponent(ButtonRoomBackWall);
 	walls->AddComponent(ExitLeftWall);
 	walls->AddComponent(ExitBackWall);
@@ -294,7 +295,7 @@ void Update() {
 
 	MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
 	ButtonMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	
+
 	Button->AddComponent(ButtonMesh);
 
 	//pat added
@@ -315,6 +316,9 @@ void Update() {
 	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 	LeftController->AddComponent(pickup2);
 	TimeManager::Instance()->AddPlayerObjectToTimeline(LeftController);
+	if (VREnabled) {
+		VRInputManager::GetInstance().Update();
+	}
 
 	//Sound Initializing---------------------------------------------------
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
@@ -322,7 +326,7 @@ void Update() {
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
-	
+
 	//Temp Camera OBJ
 	Transform camTrans;
 	BaseObject camObj("TempCam", camTrans);
@@ -374,7 +378,7 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(LeftController);
 	Physics::Instance()->mObjects.push_back(Button);
 	Level::Initialize(headset, RightController, LeftController);
-	Level* L1 = Level::Instance(); 
+	Level* L1 = Level::Instance();
 	L1->iAddObject(PhysicsBox);
 	L1->iAddObject(PhysicsBox2);
 	L1->iAddObject(PhysicsSphere);
@@ -412,7 +416,7 @@ void Update() {
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
 	}
-	
+
 	UpdateTime();
 	fixedTime = 0;
 	while (true) {
@@ -423,17 +427,16 @@ void Update() {
 			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-		}
-		else {
+		} else {
 			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == *Renderer::Instance()->iGetWindow()) {
 				break;
 			}
 			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
 
-			//SystemLogger::Debug() << "Regular Update " << std::endl;
+			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			Level::Instance()->iUpdate();
-			
+
 			TimeManager::Instance()->Update(deltaTime);
 			Renderer::Instance()->Render(deltaTime);
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
@@ -447,6 +450,7 @@ void Update() {
 		}
 	}
 	Messager::Destroy();
+
 }
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {
@@ -486,17 +490,17 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 	}
 
 	hwnd = CreateWindowEx(                                     //Create our Extended Window
-		NULL,                                //Extended style
-		WndClassName,                        //Name of our windows class
-		L"Chrono::Loop",                     //Name in the title bar of our window
-		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
-		600, 150,                            //Top left corner of window
-		width,                               //Width of our window
-		height,                              //Height of our window
-		NULL,                                //Handle to parent window
-		NULL,                                //Handle to a Menu
-		hInstance,                           //Specifies instance of current program
-		NULL                                 //used for an MDI client window
+												NULL,                                //Extended style
+												WndClassName,                        //Name of our windows class
+												L"Chrono::Loop",                     //Name in the title bar of our window
+												WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
+												600, 150,                            //Top left corner of window
+												width,                               //Width of our window
+												height,                              //Height of our window
+												NULL,                                //Handle to parent window
+												NULL,                                //Handle to a Menu
+												hInstance,                           //Specifies instance of current program
+												NULL                                 //used for an MDI client window
 	);
 	if (!hwnd) {
 		MessageBox(NULL, L"Error creating window", L"Error", MB_OK | MB_ICONERROR);
@@ -511,11 +515,11 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			break;
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 	return 0;
 }

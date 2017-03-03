@@ -4,6 +4,7 @@
 #include "../Common/Logger.h"
 
 namespace Epoch {
+
 	struct CCElasticAABBtoAABB : public CodeComponent {
 		vec4f norm = { 0,0,0,0 };
 		bool colliding = false;
@@ -34,9 +35,9 @@ namespace Epoch {
 
 				float avgElasticity = (_col.mElasticity + _other.mElasticity) / 2;
 				_col.mVelocity = norm * (1 + avgElasticity);
-			}
+			} else
+				colliding = false;
 		}
 	};
-
 
 }

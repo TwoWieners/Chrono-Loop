@@ -235,7 +235,7 @@ namespace Epoch {
 		_plane.mOffset = _pointA * _plane.mNormal;
 	}
 
-	//Returns 1 if on or in front of plane 
+	//Returns 1 if on or in front of plane
 	//Returns 2 if behind plane
 	int Physics::PointToPlane(Plane& _plane, vec4f& _point) {
 		float pOffset = _point * _plane.mNormal;
@@ -275,61 +275,61 @@ namespace Epoch {
 	/*
 	void Physics::BuildFrustum(Frustum& _frustum, float _fov, float _nearDist, float _farDist, float _ratio, matrix4& _camXform)
 	{
-		vec4f fc = _camXform.axis_pos - _camXform.axis_z * _farDist;
-		vec4f nc = _camXform.axis_pos - _camXform.axis_z * _nearDist;
-		float Hnear = 2 * tan(_fov / 2) * _nearDist;
-		float Hfar = 2 * tan(_fov / 2) * _farDist;
-		float Wnear = Hnear * _ratio;
-		float Wfar = Hfar * _ratio;
+	vec4f fc = _camXform.axis_pos - _camXform.axis_z * _farDist;
+	vec4f nc = _camXform.axis_pos - _camXform.axis_z * _nearDist;
+	float Hnear = 2 * tan(_fov / 2) * _nearDist;
+	float Hfar = 2 * tan(_fov / 2) * _farDist;
+	float Wnear = Hnear * _ratio;
+	float Wfar = Hfar * _ratio;
 
-		_frustum.mPoints[0] = fc + _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
-		_frustum.mPoints[3] = fc + _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
-		_frustum.mPoints[1] = fc - _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
-		_frustum.mPoints[2] = fc - _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
+	_frustum.mPoints[0] = fc + _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
+	_frustum.mPoints[3] = fc + _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
+	_frustum.mPoints[1] = fc - _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
+	_frustum.mPoints[2] = fc - _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
 
-		_frustum.mPoints[4] = nc + _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
-		_frustum.mPoints[5] = nc + _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
-		_frustum.mPoints[7] = nc - _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
-		_frustum.mPoints[6] = nc - _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
+	_frustum.mPoints[4] = nc + _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
+	_frustum.mPoints[5] = nc + _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
+	_frustum.mPoints[7] = nc - _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
+	_frustum.mPoints[6] = nc - _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
 
-		BuildPlane(_frustum.mFaces[0], _frustum.mPoints[6], _frustum.mPoints[7], _frustum.mPoints[4]);
-		BuildPlane(_frustum.mFaces[1], _frustum.mPoints[1], _frustum.mPoints[2], _frustum.mPoints[3]);
-		BuildPlane(_frustum.mFaces[2], _frustum.mPoints[7], _frustum.mPoints[1], _frustum.mPoints[0]);
-		BuildPlane(_frustum.mFaces[3], _frustum.mPoints[2], _frustum.mPoints[6], _frustum.mPoints[5]);
-		BuildPlane(_frustum.mFaces[4], _frustum.mPoints[5], _frustum.mPoints[4], _frustum.mPoints[0]);
-		BuildPlane(_frustum.mFaces[5], _frustum.mPoints[7], _frustum.mPoints[6], _frustum.mPoints[2]);
+	BuildPlane(_frustum.mFaces[0], _frustum.mPoints[6], _frustum.mPoints[7], _frustum.mPoints[4]);
+	BuildPlane(_frustum.mFaces[1], _frustum.mPoints[1], _frustum.mPoints[2], _frustum.mPoints[3]);
+	BuildPlane(_frustum.mFaces[2], _frustum.mPoints[7], _frustum.mPoints[1], _frustum.mPoints[0]);
+	BuildPlane(_frustum.mFaces[3], _frustum.mPoints[2], _frustum.mPoints[6], _frustum.mPoints[5]);
+	BuildPlane(_frustum.mFaces[4], _frustum.mPoints[5], _frustum.mPoints[4], _frustum.mPoints[0]);
+	BuildPlane(_frustum.mFaces[5], _frustum.mPoints[7], _frustum.mPoints[6], _frustum.mPoints[2]);
 	}
 
 	bool Physics::FrustumToSphere(Frustum & _frustum, Sphere & _sphere)
 	{
-		int test = 0;
-		for (int i = 0; i < 6; ++i)
-		{
-			if (SphereToPlane(_frustum.mFaces[i], _sphere) == 2)
-				break;
-			else
-				test++;
-		}
+	int test = 0;
+	for (int i = 0; i < 6; ++i)
+	{
+	if (SphereToPlane(_frustum.mFaces[i], _sphere) == 2)
+	break;
+	else
+	test++;
+	}
 
-		if (test == 6)
-			return true;
-		return false;
+	if (test == 6)
+	return true;
+	return false;
 	}
 
 	bool Physics::FrustumToAABB(Frustum & _frustum, AABB & _aabb)
 	{
-		int test = 0;
-		for (int i = 0; i < 6; ++i)
-		{
-			if (AabbToPlane(_frustum.mFaces[i], _aabb) == 2)
-				break;
-			else
-				test++;
-		}
+	int test = 0;
+	for (int i = 0; i < 6; ++i)
+	{
+	if (AabbToPlane(_frustum.mFaces[i], _aabb) == 2)
+	break;
+	else
+	test++;
+	}
 
-		if (test == 6)
-			return true;
-		return false;
+	if (test == 6)
+	return true;
+	return false;
 	}
 	*/
 #pragma endregion
@@ -562,6 +562,7 @@ namespace Epoch {
 								if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere) {
 									Sphere s2(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 									if (SphereToSphere(s1, s2)) {
+										SystemLogger::Debug() << "Sphere to sphere collision" << std::endl;
 										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
 											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
 											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
@@ -700,56 +701,55 @@ namespace Epoch {
 								if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Cube) {
 									AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 									if (AABBtoAABB(aabb1, aabb2)) {
-										//SystemLogger::GetLog() << "PICKED UP CUBE" << std::endl;
+										SystemLogger::GetLog() << "PICKED UP CUBE" << std::endl;
 										((ControllerCollider*)collider)->mHitting.insert(otherCol);
 									} else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 										((ControllerCollider*)collider)->mHitting.erase(otherCol);
 								} else if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Sphere) {
 									Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 									if (SphereToAABB(s1, aabb1)) {
-										//SystemLogger::GetLog() << "PICKED UP SPHERE" << std::endl;
+										SystemLogger::GetLog() << "PICKED UP SPHERE" << std::endl;
 										((ControllerCollider*)collider)->mHitting.insert(otherCol);
 									} else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 										((ControllerCollider*)collider)->mHitting.erase(otherCol);
 								}
 							}
 						}
-
-						if (((ControllerCollider*)collider)->mLeft &&
-							(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
-							 collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID())) {
-							collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
-							collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-							collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetVelocity();
-							collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition().tiers[3]);
-						} else if ((!(((ControllerCollider*)collider)->mLeft) &&
-							(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
-							 collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID()))) {
-							collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
-							collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-							collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Primary).GetVelocity();
-							collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition().tiers[3]);
-						}
-
-						if (collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller) {
-							if (collider->mShouldMove || !collider->mRewind) {
-								collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude3() * collider->mDrag * collider->mArea);
-								collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-								collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
-								collider->mRewind = false;
-
-								if (!collider->mRewind && fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
-									collider->mForces = { 0,0,0,0 };
-								else
-									collider->mForces *= 0.99f;
-							}
-
-							collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
-						}
 					}
+
+					if (((ControllerCollider*)collider)->mLeft &&
+						(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
+						 collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID())) {
+						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetVelocity();
+						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition().tiers[3]);
+					} else if ((!(((ControllerCollider*)collider)->mLeft) &&
+						(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
+						 collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID()))) {
+						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Primary).GetVelocity();
+						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition().tiers[3]);
+					}
+				}
+
+				if (collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller) {
+					if (collider->mShouldMove || !collider->mRewind) {
+						collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude3() * collider->mDrag * collider->mArea);
+						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+						collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+						collider->mRewind = false;
+
+						if (!collider->mRewind && fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
+							collider->mForces = { 0,0,0,0 };
+						else
+							collider->mForces *= 0.99f;
+					}
+
+					collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 				}
 			}
 		}
 	}
-
 }
