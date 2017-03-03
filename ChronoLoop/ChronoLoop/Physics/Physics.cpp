@@ -748,7 +748,7 @@ namespace Epoch {
 
 					collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 				}
-			}//For all colliders of object end
-		}//For all objects end
-	}//Physics loop end
-} // Epoch namespace
+			} // For all colliders of object end
+		} // For all objects end
+	} // Physics loop end
+} // Epoch Namespace

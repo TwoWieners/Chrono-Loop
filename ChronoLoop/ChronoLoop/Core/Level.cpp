@@ -125,9 +125,9 @@ void Level::iSetHeadsetAndControllers(BaseObject * _headset, BaseObject * _contr
 		mController2->SetName(Controller2name);
 
 	////Add the headset and controllers to the time manager with their new ids
-	//TimeManager::Instance()->AddPlayerObjectToTimeline(mHeadset);
-	//TimeManager::Instance()->AddPlayerObjectToTimeline(mController1);
-	//TimeManager::Instance()->AddPlayerObjectToTimeline(mController2);
+	TimeManager::Instance()->AddPlayerObjectToTimeline(mHeadset);
+	TimeManager::Instance()->AddPlayerObjectToTimeline(mController1);
+	TimeManager::Instance()->AddPlayerObjectToTimeline(mController2);
 
 		//Add the headset and controllers to the time manager with their new ids
 		TimeManager::Instance()->AddObjectToTimeline(mHeadset);
