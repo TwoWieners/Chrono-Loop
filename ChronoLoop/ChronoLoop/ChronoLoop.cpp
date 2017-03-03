@@ -99,6 +99,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	ShutdownSystems();
 	Level::DestroyInstance();
 	SystemLogger::DestroyInstance();
+
 	vrsys = nullptr;
 
 #if _DEBUG
@@ -193,7 +194,7 @@ void Update() {
 
 	Transform SphereTransform2;
 	matrix4 SphereMat2 = matrix4::CreateScale(0.15f, 0.15f, 0.15f);
-	SphereMat2 *= matrix4::CreateTranslation(4, 4, 0);
+	SphereMat2 *= matrix4::CreateTranslation(3, 5, 0);
 	SphereTransform2.SetMatrix(SphereMat2);
 	BaseObject* PhysicsSphere2 = Pool::Instance()->iGetObject()->Reset("sphere2", SphereTransform2);
 	SphereCollider *BallCollider2 = new SphereCollider(PhysicsSphere2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.5f, 0.2f, 0.1f, 0.03f, 0.15f);
@@ -442,6 +443,11 @@ void Update() {
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;
+				if (fixedTime >= 5) {
+					SystemLogger::Warn() << "Well, fixedTime was greater than 5 seconds. I'm going to assume this is because you put a breakpoint somewhere, and I'm going to make it 0." << std::endl;
+					UpdateTime();
+					fixedTime = 0;
+				}
 			}
 
 			if (VREnabled) {

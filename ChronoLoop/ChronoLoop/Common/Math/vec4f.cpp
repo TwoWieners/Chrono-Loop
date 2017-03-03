@@ -181,7 +181,7 @@ namespace Epoch {
 
 	vec4f vec4f::Normalize() const {
 		vec4f temp;
-		float norm = 1 / Magnitude();
+		float norm = 1 / Magnitude3();
 		for (int i = 0; i < 4; ++i)
 			temp.xyzw[i] = xyzw[i] * norm;
 		return temp;

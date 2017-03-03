@@ -562,7 +562,6 @@ namespace Epoch {
 								if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere) {
 									Sphere s2(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 									if (SphereToSphere(s1, s2)) {
-										SystemLogger::Debug() << "Sphere to sphere collision" << std::endl;
 										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
 											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
 											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
@@ -701,14 +700,14 @@ namespace Epoch {
 								if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Cube) {
 									AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 									if (AABBtoAABB(aabb1, aabb2)) {
-										SystemLogger::GetLog() << "PICKED UP CUBE" << std::endl;
+										//SystemLogger::GetLog() << "PICKED UP CUBE" << std::endl;
 										((ControllerCollider*)collider)->mHitting.insert(otherCol);
 									} else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 										((ControllerCollider*)collider)->mHitting.erase(otherCol);
 								} else if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Sphere) {
 									Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 									if (SphereToAABB(s1, aabb1)) {
-										SystemLogger::GetLog() << "PICKED UP SPHERE" << std::endl;
+										//SystemLogger::GetLog() << "PICKED UP SPHERE" << std::endl;
 										((ControllerCollider*)collider)->mHitting.insert(otherCol);
 									} else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 										((ControllerCollider*)collider)->mHitting.erase(otherCol);
@@ -749,7 +748,7 @@ namespace Epoch {
 
 					collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 				}
-			}
-		}
-	}
-}
+			}//For all colliders of object end
+		}//For all objects end
+	}//Physics loop end
+} // Epoch namespace
