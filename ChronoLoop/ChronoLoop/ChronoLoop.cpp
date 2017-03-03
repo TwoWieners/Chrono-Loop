@@ -142,7 +142,7 @@ void Update() {
 	matrix4 mat1 = matrix4::CreateTranslation(1, 4, 0);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
-	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.3f, 0.2f, 0.1f, 0.1f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.3f, 0.1f, 0.1f, 0.1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
 	BoxCollider->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollision = new CCElasticReactionWithPlane;
 	CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
@@ -161,10 +161,10 @@ void Update() {
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
 
 	Transform transformBox;
-	matrix4 matBox = matrix4::CreateTranslation(2, 4, 0);
+	matrix4 matBox = matrix4::CreateTranslation(2, 4, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
 	transformBox.SetMatrix(matBox);
 	BaseObject* PhysicsBox2 = Pool::Instance()->iGetObject()->Reset("aabb2", transformBox);//new BaseObject("aabb", transform);
-	CubeCollider *BoxCollider2 = new CubeCollider(PhysicsBox2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.3f, 0.2f, 0.1f, 0.1f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	CubeCollider *BoxCollider2 = new CubeCollider(PhysicsBox2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.4f, 0.1f, 0.1f, 0.01f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
 	BoxCollider2->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollisionBox = new CCElasticReactionWithPlane;
 	CodeComponent* BoxCollision2 = new CCElasticAABBtoAABB;
@@ -180,7 +180,7 @@ void Update() {
 	SphereMat *= matrix4::CreateTranslation(3, 4, 0);
 	SphereTransform.SetMatrix(SphereMat);
 	BaseObject* PhysicsSphere = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform);
-	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.5f, 0.2f, 0.1f, 0.03f, 0.15f);
+	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.6f, 0.2f, 0.1f, 0.03f, 0.15f);
 	BallCollider->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollision2 = new CCElasticReactionWithPlane;
 	CodeComponent* SpheretoSphere = new CCElasticSphereToSphere;
@@ -364,7 +364,18 @@ void Update() {
 	BlockDoor->AddComponent(doorCol);
 	TimeManager::Instance()->AddObjectToTimeline(BlockDoor);
 
+	Transform downOne;
+	downOne.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
+	BaseObject* ControlBoard = Pool::Instance()->iGetObject()->Reset("ControlsBoards", downOne);
+	MeshComponent* controlsMesh = new MeshComponent("../Resources/ControlBoard.obj");
+	controlsMesh->AddTexture("../Resources/ControlScheme.png", eTEX_DIFFUSE);
+	ControlBoard->AddComponent(controlsMesh);
 
+
+	BaseObject* WinBoard = Pool::Instance()->iGetObject()->Reset("WinBoard", downOne);
+	MeshComponent* winMesh = new MeshComponent("../Resources/WinBoard.obj");
+	winMesh->AddTexture("../Resources/youwon.png", eTEX_DIFFUSE);
+	WinBoard->AddComponent(winMesh);
 
 	Physics::Instance()->mObjects.push_back(PhysicsBox);
 	Physics::Instance()->mObjects.push_back(BlockDoor);
@@ -391,6 +402,8 @@ void Update() {
 	L1->iAddObject(Button);
 	L1->iAddObject(ExitWall);
 	L1->iAddObject(BlockDoor);
+	L1->iAddObject(ControlBoard);
+	L1->iAddObject(WinBoard);
 	L1->iCallStart();
 
 	//// Test for TextureManager::iAddTexture2D. Works nicely!

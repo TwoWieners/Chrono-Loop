@@ -6,7 +6,7 @@
 #include "..\Objects\Component.h"
 #include "..\Actions\CodeComponent.hpp"
 #include "..\Input\VRInputManager.h"
-#include "../Core/Level.h"
+#include "..\Core\Level.h"
 
 namespace Epoch {
 
@@ -275,61 +275,61 @@ namespace Epoch {
 	/*
 	void Physics::BuildFrustum(Frustum& _frustum, float _fov, float _nearDist, float _farDist, float _ratio, matrix4& _camXform)
 	{
-	vec4f fc = _camXform.axis_pos - _camXform.axis_z * _farDist;
-	vec4f nc = _camXform.axis_pos - _camXform.axis_z * _nearDist;
-	float Hnear = 2 * tan(_fov / 2) * _nearDist;
-	float Hfar = 2 * tan(_fov / 2) * _farDist;
-	float Wnear = Hnear * _ratio;
-	float Wfar = Hfar * _ratio;
+		vec4f fc = _camXform.axis_pos - _camXform.axis_z * _farDist;
+		vec4f nc = _camXform.axis_pos - _camXform.axis_z * _nearDist;
+		float Hnear = 2 * tan(_fov / 2) * _nearDist;
+		float Hfar = 2 * tan(_fov / 2) * _farDist;
+		float Wnear = Hnear * _ratio;
+		float Wfar = Hfar * _ratio;
 
-	_frustum.mPoints[0] = fc + _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
-	_frustum.mPoints[3] = fc + _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
-	_frustum.mPoints[1] = fc - _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
-	_frustum.mPoints[2] = fc - _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
+		_frustum.mPoints[0] = fc + _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
+		_frustum.mPoints[3] = fc + _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
+		_frustum.mPoints[1] = fc - _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
+		_frustum.mPoints[2] = fc - _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
 
-	_frustum.mPoints[4] = nc + _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
-	_frustum.mPoints[5] = nc + _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
-	_frustum.mPoints[7] = nc - _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
-	_frustum.mPoints[6] = nc - _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
+		_frustum.mPoints[4] = nc + _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
+		_frustum.mPoints[5] = nc + _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
+		_frustum.mPoints[7] = nc - _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
+		_frustum.mPoints[6] = nc - _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
 
-	BuildPlane(_frustum.mFaces[0], _frustum.mPoints[6], _frustum.mPoints[7], _frustum.mPoints[4]);
-	BuildPlane(_frustum.mFaces[1], _frustum.mPoints[1], _frustum.mPoints[2], _frustum.mPoints[3]);
-	BuildPlane(_frustum.mFaces[2], _frustum.mPoints[7], _frustum.mPoints[1], _frustum.mPoints[0]);
-	BuildPlane(_frustum.mFaces[3], _frustum.mPoints[2], _frustum.mPoints[6], _frustum.mPoints[5]);
-	BuildPlane(_frustum.mFaces[4], _frustum.mPoints[5], _frustum.mPoints[4], _frustum.mPoints[0]);
-	BuildPlane(_frustum.mFaces[5], _frustum.mPoints[7], _frustum.mPoints[6], _frustum.mPoints[2]);
+		BuildPlane(_frustum.mFaces[0], _frustum.mPoints[6], _frustum.mPoints[7], _frustum.mPoints[4]);
+		BuildPlane(_frustum.mFaces[1], _frustum.mPoints[1], _frustum.mPoints[2], _frustum.mPoints[3]);
+		BuildPlane(_frustum.mFaces[2], _frustum.mPoints[7], _frustum.mPoints[1], _frustum.mPoints[0]);
+		BuildPlane(_frustum.mFaces[3], _frustum.mPoints[2], _frustum.mPoints[6], _frustum.mPoints[5]);
+		BuildPlane(_frustum.mFaces[4], _frustum.mPoints[5], _frustum.mPoints[4], _frustum.mPoints[0]);
+		BuildPlane(_frustum.mFaces[5], _frustum.mPoints[7], _frustum.mPoints[6], _frustum.mPoints[2]);
 	}
 
 	bool Physics::FrustumToSphere(Frustum & _frustum, Sphere & _sphere)
 	{
-	int test = 0;
-	for (int i = 0; i < 6; ++i)
-	{
-	if (SphereToPlane(_frustum.mFaces[i], _sphere) == 2)
-	break;
-	else
-	test++;
-	}
+		int test = 0;
+		for (int i = 0; i < 6; ++i)
+		{
+			if (SphereToPlane(_frustum.mFaces[i], _sphere) == 2)
+				break;
+			else
+				test++;
+		}
 
-	if (test == 6)
-	return true;
-	return false;
+		if (test == 6)
+			return true;
+		return false;
 	}
 
 	bool Physics::FrustumToAABB(Frustum & _frustum, AABB & _aabb)
 	{
-	int test = 0;
-	for (int i = 0; i < 6; ++i)
-	{
-	if (AabbToPlane(_frustum.mFaces[i], _aabb) == 2)
-	break;
-	else
-	test++;
-	}
+		int test = 0;
+		for (int i = 0; i < 6; ++i)
+		{
+			if (AabbToPlane(_frustum.mFaces[i], _aabb) == 2)
+				break;
+			else
+				test++;
+		}
 
-	if (test == 6)
-	return true;
-	return false;
+		if (test == 6)
+			return true;
+		return false;
 	}
 	*/
 #pragma endregion
@@ -543,7 +543,7 @@ namespace Epoch {
 				collider = (Collider*)mObjects[i]->mComponents[eCOMPONENT_COLLIDER][x];
 				collider->mTotalForce = collider->mForces + collider->mWeight + collider->mDragForce;
 
-				if (collider->mColliderType == Collider::eCOLLIDER_Sphere)//Check SphereCollider's collision with other objects
+				if (collider->mShouldMove && collider->mColliderType == Collider::eCOLLIDER_Sphere)//Check SphereCollider's collision with other objects
 				{
 					Sphere s1(((SphereCollider*)collider)->GetPos(), ((SphereCollider*)collider)->mRadius);
 					for (int j = 0; j < objs; ++j) {
@@ -582,9 +582,14 @@ namespace Epoch {
 									{
 										float bottom = ((SphereCollider*)collider)->mCenter.y - ((SphereCollider*)collider)->mRadius;
 										if (bottom < otherCol->GetPos().y) {
-											float depth = bottom + otherCol->GetPos().y;
-											vec4f correction = ((PlaneCollider*)otherCol)->mNormal * (depth / (collider->mInvMass + otherCol->mInvMass)) * 0.2f;
-											collider->SetPos(collider->GetPos() - (correction * collider->mInvMass));
+											vec4f pos = collider->GetPos();
+											collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
+
+											CalcFriction(*collider, *otherCol);
+											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
+												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+											}
 										}
 									} else if (result == 3)// intersecting plane
 									{
@@ -593,12 +598,15 @@ namespace Epoch {
 											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
 											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
 										}
+
+										vec4f pos = collider->GetPos();
+										collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + fabsf(((SphereCollider*)collider)->mRadius), pos.z, 1));
 									}
 								}
 							}
 						}
 					}
-				} else if (collider->mColliderType == Collider::eCOLLIDER_Cube)//Check CubeCollider's collision with other objects
+				} else if (collider->mShouldMove && collider->mColliderType == Collider::eCOLLIDER_Cube)//Check CubeCollider's collision with other objects
 				{
 					AABB aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
 					for (int j = 0; j < objs; ++j) {
@@ -630,16 +638,27 @@ namespace Epoch {
 										if (result == 2)//behind plane
 										{
 											if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y) {
-												float depth = ((CubeCollider*)collider)->mMin.y + otherCol->GetPos().y;
-												vec4f correction = ((PlaneCollider*)otherCol)->mNormal * (depth / (collider->mInvMass + otherCol->mInvMass)) * 0.2f;
-												collider->SetPos(collider->GetPos() - (correction * collider->mInvMass));
+												vec4f pos = collider->GetPos();
+												collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
+
+												CalcFriction(*collider, *otherCol);
+												for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+												}
 											}
-										} else if (result == 3)// intersecting plane
+										}
+										if (result == 3)// intersecting plane
 										{
 											CalcFriction(*collider, *otherCol);
 											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
 												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
 												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+											}
+
+											if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y) {
+												vec4f pos = collider->GetPos();
+												collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + fabsf(((CubeCollider*)collider)->mMinOffset.y), pos.z, 1));
 											}
 										}
 									}
@@ -650,7 +669,6 @@ namespace Epoch {
 				} else if (collider->mColliderType == Collider::eCOLLIDER_Button)//Check ButtonCollider's collision with other objects/controller
 				{
 					AABB aabb1(((ButtonCollider*)collider)->mMin, ((ButtonCollider*)collider)->mMax);
-
 
 					if (AabbToPlane(((ButtonCollider*)collider)->mUpperBound, aabb1) != 2) {
 						collider->mVelocity = { 0,0,0,0 };
@@ -699,17 +717,15 @@ namespace Epoch {
 								otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
 								if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Cube) {
 									AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
-									if (AABBtoAABB(aabb1, aabb2)) {
-										//SystemLogger::GetLog() << "PICKED UP CUBE" << std::endl;
+									if (AABBtoAABB(aabb1, aabb2))
 										((ControllerCollider*)collider)->mHitting.insert(otherCol);
-									} else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
+									else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 										((ControllerCollider*)collider)->mHitting.erase(otherCol);
 								} else if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Sphere) {
 									Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
-									if (SphereToAABB(s1, aabb1)) {
-										//SystemLogger::GetLog() << "PICKED UP SPHERE" << std::endl;
+									if (SphereToAABB(s1, aabb1))
 										((ControllerCollider*)collider)->mHitting.insert(otherCol);
-									} else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
+									else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 										((ControllerCollider*)collider)->mHitting.erase(otherCol);
 								}
 							}
@@ -721,15 +737,15 @@ namespace Epoch {
 						 collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID())) {
 						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetVelocity();
-						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition().tiers[3]);
+						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Primary).GetVelocity();
+						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition().tiers[3]);
 					} else if ((!(((ControllerCollider*)collider)->mLeft) &&
 						(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
 						 collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID()))) {
 						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Primary).GetVelocity();
-						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition().tiers[3]);
+						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetVelocity();
+						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition().tiers[3]);
 					}
 				}
 
@@ -748,7 +764,9 @@ namespace Epoch {
 
 					collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 				}
-			} // For all colliders of object end
-		} // For all objects end
-	} // Physics loop end
-} // Epoch Namespace
+			}//For all colliders of object end
+		}//For all objects end
+	}//Physics loop end
+
+
+}
