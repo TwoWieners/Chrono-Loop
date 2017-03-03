@@ -26,13 +26,12 @@ namespace Epoch {
 		friend class Physics;
 		friend class BaseObject;
 
-		static unsigned short mComponentCount;
-		unsigned short mComponentId;	//unique component id
-		unsigned short mComponentNum;  //the nth number component of a base object. This is for knowing the position in the bitset
-
 	protected:
 		bool mDestroyed = false;
 		bool mIsEnabled = true, mIsValid = true;
+		static unsigned short mComponentCount;
+		unsigned short mComponentId;    //unique component id
+		unsigned short mComponentNum;  //the nth number component of a base object. This is for knowing the position in the bitset
 		ComponentType mType = eCOMPONENT_MAX;
 		BaseObject* mObject = nullptr;
 	public:
@@ -51,6 +50,8 @@ namespace Epoch {
 		unsigned short GetColliderId() { return mComponentId; };
 		Transform& GetTransform();
 		Transform& GetTransform() const;
+		//Dont call this unless you are absolutly sure you know what you are doing
+		inline void SetComponentId(unsigned short _id) { mComponentId = _id; }
 	};
 
 	class Listener : public Component {

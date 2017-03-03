@@ -73,6 +73,7 @@ namespace Epoch {
 			Controller1->AddComponent(CubeColider);
 			Controller1->AddComponent(mc);
 
+
 			BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount)); //new BaseObject("Controller2" + std::to_string(rand), identity);
 			MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 			ControllerCollider* CubeColider2 = new ControllerCollider(Controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
@@ -82,16 +83,16 @@ namespace Epoch {
 
 			//Make a clone 3 seconds ago.
 			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - 30, headset, Controller1, Controller2);
-			Level::Instance()->iSetHeadsetAndControllers(headset, Controller1, Controller2);
+			Level::Instance()->iSetHeadsetAndControllers(headset, Controller1, Controller2, CubeColider, CubeColider2);
 			//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
+			Physics::Instance()->mObjects.push_back(headset);
+			Physics::Instance()->mObjects.push_back(Controller1);
+			Physics::Instance()->mObjects.push_back(Controller2);
 			TimeManager::Instance()->AddPlayerObjectToTimeline(headset);
 			TimeManager::Instance()->AddPlayerObjectToTimeline(Controller1);
 			TimeManager::Instance()->AddPlayerObjectToTimeline(Controller2);
 			mCloneCount++;
 		}
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - 30, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID());
-		}
-
 	}
+
 }

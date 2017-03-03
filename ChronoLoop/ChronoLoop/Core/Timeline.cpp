@@ -100,21 +100,43 @@ namespace Epoch {
 		}
 	}
 
-	void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInfo* _destInfo) {
-		switch (_destComp->mCompType) {
-			//For each of the collider in the vec
-			case ComponentType::eCOMPONENT_COLLIDER:
-			{
-				//Loop to find the same collider component
-				for (unsigned int j = 0; j < _obj->GetComponentCount(eCOMPONENT_COLLIDER); j++) {
-					Component* currComp = _obj->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
-					if (currComp->GetColliderId() == _destComp->mId) {
-						((Collider*)currComp)->mRewind = true;
-						//((Collider*)currComp)->mShouldMove = false;
-						((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)_destComp)->mAcc;
-						((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)_destComp)->mVel;
-						((Collider*)currComp)->AddForce(((SnapComponent_Physics*)_destComp)->mForces);
-						((Collider*)currComp)->SetPos(*_destInfo->mTransform.GetPosition());
+void Timeline::CheckforLostObjects(std::vector<BaseObject*>& mClones)
+{
+	for(auto obj : mObjectLifeTimes)
+	{
+		if(obj.second->mBirth > mCurrentGameTimeIndx)
+		{
+			for (unsigned int  i = 0; i < mClones.size(); i++) {
+				if (mClones[i]->GetUniqueId() == obj.first) {
+					break;
+				}
+				else if(mClones[i]->GetUniqueId() != obj.first && i == mClones.size()-1)
+				{
+					//TODO PAT: PLS REMOVWE THIS FROM LEVEL AND THOW BACK IN POOL
+					delete obj.second;
+					mObjectLifeTimes.erase(obj.first);
+					mLiveObjects.erase(obj.first);
+				}
+			}
+		}
+	}
+}
+
+void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInfo* _destInfo) {
+	switch (_destComp->mCompType) {
+		//For each of the collider in the vec
+	case ComponentType::eCOMPONENT_COLLIDER:
+	{
+		//Loop to find the same collider component
+		for (unsigned int j = 0; j < _obj->GetComponentCount(eCOMPONENT_COLLIDER); j++) {
+			Component* currComp = _obj->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
+			if (currComp->GetColliderId() == _destComp->mId) {
+				((Collider*)currComp)->mRewind = true;
+				//((Collider*)currComp)->mShouldMove = false;
+				((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)_destComp)->mAcc;
+				((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)_destComp)->mVel;
+				((Collider*)currComp)->AddForce(((SnapComponent_Physics*)_destComp)->mForces);
+				((Collider*)currComp)->SetPos(*_destInfo->mTransform.GetPosition());
 
 						//Set the bitset
 						ChangeBitsetToSnap(_destInfo, currComp);
@@ -358,21 +380,22 @@ namespace Epoch {
 		bool OldSnap = false;
 
 
-		//We are making a new snap in the timeline
-		//If the CurrentFrame is the last one on the list, make a new one
-		if (mCurrentGameTimeIndx == mSnaptimes.size() - 1 || mSnaptimes.size() == 0) {
-			snap = new Snapshot();
-			snap->mTime = _time;
-		}
-		//We are on an old Snapshot
-		else {
-			snap = mSnapshots[_time];
-			OldSnap = true;
-		}
-		//TODO PAT: IF AN OBJECT IS ADDED THEN REWIND TIME TO BEFORE, ADD THAT OBJECT TO THE POOL
-		//Make a func that checks the mObject lifes and delete non-clones that no longer exists. Because rewinding time should get rid of everything but clones.  
-		//If first snapshot taken
-
+	//We are making a new snap in the timeline
+	//If the CurrentFrame is the last one on the list, make a new one
+	if (mCurrentGameTimeIndx == mSnaptimes.size() - 1 || mSnaptimes.size() == 0) {
+		snap = new Snapshot();
+		snap->mTime = _time;
+	}
+	//We are on an old Snapshot
+	else {
+		snap = mSnapshots[_time];
+		OldSnap = true;
+	}
+	
+	//TODO PAT: FINISH THIS FUNC
+	//CheckforLostObjects(_clones);
+	
+	//If first snapshot taken
 		//TODO PAT: break up the logic loop here and 
 		if (mSnapshots.size() == 0) {
 			for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {

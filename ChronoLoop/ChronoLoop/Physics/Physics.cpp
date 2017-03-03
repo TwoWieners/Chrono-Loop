@@ -6,6 +6,7 @@
 #include "..\Objects\Component.h"
 #include "..\Actions\CodeComponent.hpp"
 #include "..\Input\VRInputManager.h"
+#include "../Core/Level.h"
 
 namespace Epoch {
 
@@ -335,7 +336,7 @@ namespace Epoch {
 
 
 #pragma region MISC_COLLISION
-	 
+
 	bool Physics::AABBtoAABB(AABB& _aabb1, AABB& _aabb2) {
 		if (_aabb1.mMax.x < _aabb2.mMin.x || _aabb1.mMin.x > _aabb2.mMax.x)
 			return false;
@@ -699,51 +700,56 @@ namespace Epoch {
 								if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Cube) {
 									AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 									if (AABBtoAABB(aabb1, aabb2)) {
-										SystemLogger::GetLog() << "PICKED UP CUBE" << std::endl;
+										//SystemLogger::GetLog() << "PICKED UP CUBE" << std::endl;
 										((ControllerCollider*)collider)->mHitting.insert(otherCol);
 									} else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 										((ControllerCollider*)collider)->mHitting.erase(otherCol);
 								} else if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Sphere) {
 									Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 									if (SphereToAABB(s1, aabb1)) {
-										SystemLogger::GetLog() << "PICKED UP SPHERE" << std::endl;
+										//SystemLogger::GetLog() << "PICKED UP SPHERE" << std::endl;
 										((ControllerCollider*)collider)->mHitting.insert(otherCol);
 									} else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 										((ControllerCollider*)collider)->mHitting.erase(otherCol);
 								}
 							}
 						}
+
+						if (((ControllerCollider*)collider)->mLeft &&
+							(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
+							 collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID())) {
+							collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+							collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+							collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetVelocity();
+							collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition().tiers[3]);
+						} else if ((!(((ControllerCollider*)collider)->mLeft) &&
+							(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
+							 collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID()))) {
+							collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+							collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+							collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Primary).GetVelocity();
+							collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition().tiers[3]);
+						}
+
+						if (collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller) {
+							if (collider->mShouldMove || !collider->mRewind) {
+								collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude3() * collider->mDrag * collider->mArea);
+								collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+								collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+								collider->mRewind = false;
+
+								if (!collider->mRewind && fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
+									collider->mForces = { 0,0,0,0 };
+								else
+									collider->mForces *= 0.99f;
+							}
+
+							collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
+						}
 					}
-
-					if (((ControllerCollider*)collider)->mLeft) {
-						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
-						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetVelocity();
-						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition().tiers[3]);
-					} else {
-						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
-						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Primary).GetVelocity();
-						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition().tiers[3]);
-					}
-				}
-
-				if (collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller) {
-					if (collider->mShouldMove || !collider->mRewind) {
-						collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude3() * collider->mDrag * collider->mArea);
-						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
-						collider->mRewind = false;
-
-						if (!collider->mRewind && fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
-							collider->mForces = { 0,0,0,0 };
-						else
-							collider->mForces *= 0.99f;
-					}
-
-					collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 				}
 			}
 		}
 	}
+
 }
