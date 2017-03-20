@@ -39,6 +39,7 @@ namespace LevelEditor
         private string mCurrentFilename = string.Empty;
         private bool mCurrentFileChanged = false;
         private TestPositionForm mForm;
+        private string mSoundbank = string.Empty;
 
 
         string Filename {
@@ -95,7 +96,6 @@ namespace LevelEditor
             mStartPos = new Vector3(0, 0, 0);
             mStartRot = new Vector3(0, 0, 0);
 
-            // Purely Testificate
             mForm = new TestPositionForm();
             mForm.Show();
         }
@@ -646,20 +646,16 @@ namespace LevelEditor
 
         private void componentEditorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(!mForm.Created)
+            
+        }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OptionsForm o = new OptionsForm();
+            o.tbSoundbankText.Text = mSoundbank;
+            if(o.ShowDialog() == DialogResult.OK)
             {
-                mForm = new TestPositionForm();
-                if(selectedObject != null)
-                {
-                    mForm.SetObject(selectedObject.mComponentList);
-                } else
-                {
-                    mForm.SetObject(null);
-                }
-                mForm.Show();
-            } else
-            {
-                mForm.Focus();
+                mSoundbank = o.tbSoundbankText.Text;
             }
         }
 
