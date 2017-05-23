@@ -153,7 +153,6 @@ void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
-
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
 	//_CrtSetBreakAlloc(4390);
@@ -172,31 +171,38 @@ void Update() {
 	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-	rightRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
-	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-	MainMenuBT *bt = new MainMenuBT(eControllerType_Primary);
+	rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+	mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
+	mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
+	mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
+	TeleportAction* rightTele = new TeleportAction(eControllerType_Primary);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 	RightController->AddComponent(mc);
+	RightController->AddComponent(rightTele);
 	RightController->AddComponent(rightRaycaster);
-	RightController->AddComponent(bt);
 	RightController->AddComponent(rightConCol);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
-	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+	MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
 	MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-	leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
-	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-	MainMenuBT *bt2 = new MainMenuBT(eControllerType_Secondary);
+	leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+	mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
+	mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
+	mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
+	mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
+	TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(leftRaycaster);
+	LeftController->AddComponent(leftTele);
 	LeftController->AddComponent(mc2);
-	LeftController->AddComponent(bt2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
 	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
 	HeadsetFollow* hfollow = new HeadsetFollow();
+	MainMenuBT *bt = new MainMenuBT();
+	headset->AddComponent(bt);
 	headset->AddComponent(hfollow);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
@@ -443,8 +449,11 @@ void Update() {
 
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
+		CommandConsole::Instance().SetVRBool(true);
 	}
-	short vol = 50;
+
+
+	
 	UpdateTime();
 	fixedTime = 0;
 	renderDelta = RENDER_INTERVAL;
@@ -474,17 +483,8 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->GetWindow()) {
 				break;
 			}
-			if (GetAsyncKeyState(VK_UP))
-			{
-				vol++;
-				AudioWrapper::GetInstance().SetRTCP(AK::GAME_PARAMETERS::AMBIENTVOLUME, vol);
-			}
-			if (GetAsyncKeyState(VK_DOWN))
-			{
-				vol--;
-				AudioWrapper::GetInstance().SetRTCP(AK::GAME_PARAMETERS::AMBIENTVOLUME, vol);
-			}
 
+			CommandConsole::Instance().Update();
 			AudioWrapper::GetInstance().Update();
 			UpdateTime();
 			LevelManager::GetInstance().Update();

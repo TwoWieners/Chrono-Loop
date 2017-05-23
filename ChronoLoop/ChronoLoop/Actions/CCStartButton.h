@@ -43,7 +43,7 @@ namespace Epoch
 			mPB = new CCProgressBar();
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			mChamberObject = cLevel->FindObjectWithName("mmChamber");
+			mChamberObject = cLevel->FindObjectWithName("FloorChamber");
 			mStartSign = cLevel->FindObjectWithName("mmStartSign");
 			mExitSign = cLevel->FindObjectWithName("mmExitSign");
 			mExitButton = cLevel->FindObjectWithName("mmExitButton");
@@ -68,15 +68,17 @@ namespace Epoch
 			//mPB->GetProgressBar()->GetTransform().SetMatrix(matrix4::CreateScale(20, 1, 20) * matrix4::CreateTranslation(0, 0.0001f, 0));
 			((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::EventType::ePlay);
 			mPB->OnEnable(); 
-			if (Settings::GetInstance().GetBool("mmStartAtBottom"))
-			{
-				//mPB->OnDisable();
-			Settings::GetInstance().SetInt("mmLevel", 1);
-			}
-			else
-			{
-				Settings::GetInstance().SetInt("mmLevel", 0);
-			}
+			//if (Settings::GetInstance().GetBool("mmStartAtBottom"))
+			//{
+			//	//mPB->OnDisable();
+			//Settings::GetInstance().SetInt("mmLevel", 1);
+			//}
+			//else
+			//{
+			//	Settings::GetInstance().SetInt("mmLevel", 0);
+			//}
+
+
 			//Settings::GetInstance().SetFloat("StartButton - CurProgress",0);
 			//Settings::GetInstance().SetFloat("StartButton - FinalProgress",180);
 		
@@ -191,15 +193,15 @@ namespace Epoch
 				
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
-				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y + .2f;
+				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
 
 				((ButtonCollider*)mExitButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mExitButton->GetTransform().GetMatrix().fourth);
 				((ButtonCollider*)mExitButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mExitButton->GetTransform().GetMatrix().fourth.y - .2f;
-				((ButtonCollider*)mExitButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mExitButton->GetTransform().GetMatrix().fourth.y + .2f;
+				((ButtonCollider*)mExitButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mExitButton->GetTransform().GetMatrix().fourth.y - .2f;
 
 				((ButtonCollider*)mPrevButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mPrevButton->GetTransform().GetMatrix().fourth);
 				((ButtonCollider*)mPrevButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mPrevButton->GetTransform().GetMatrix().fourth.y - .2f;
-				((ButtonCollider*)mPrevButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mPrevButton->GetTransform().GetMatrix().fourth.y + .2f;
+				((ButtonCollider*)mPrevButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mPrevButton->GetTransform().GetMatrix().fourth.y - .2f;
 
 				if (!AudioToggle)
 				{

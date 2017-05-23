@@ -87,13 +87,16 @@ namespace Epoch
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+					mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
+					mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
+					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
+
 
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					rightRaycaster->SetPixelShader(ePS_PURETEXTURE);
-					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					mc->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 					TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
@@ -265,13 +268,16 @@ namespace Epoch
 					RightController->AddChild(clonePlus);
 
 					//pat added
-					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+					MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
+					mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
+					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
+					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
+					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					leftRaycaster->SetPixelShader(ePS_PURETEXTURE);
-					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					mc2->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
@@ -308,6 +314,16 @@ namespace Epoch
 					AudioWrapper::GetInstance().AddEmitter(timeresume, headset->GetName().c_str());
 					headset->AddComponent(timeresume);
 
+					Emitter* sound1 = new SFXEmitter();
+					((SFXEmitter*)sound1)->SetEvent(AK::EVENTS::SFX_PLAYERDEATH);
+					AudioWrapper::GetInstance().AddEmitter(sound1, headset->GetName().c_str());
+					headset->AddComponent(sound1);
+
+					Emitter* resetlevelsound = new SFXEmitter();
+					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
+					RightController->AddComponent(resetlevelsound);
+					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
+
 					AudioWrapper::GetInstance().STOP();
 
 					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
@@ -322,10 +338,6 @@ namespace Epoch
 					magicalCube->AddComponent(new CCSnapToPlayerPos);
 					next->AddObject(magicalCube);*/
 
-					Emitter* resetlevelsound = new SFXEmitter();
-					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
-					RightController->AddComponent(resetlevelsound);
-					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
 
 
 					LevelManager::GetInstance().RequestLevelChange(next);
@@ -337,7 +349,7 @@ namespace Epoch
 					start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
 					start->SetLife(500);
 					start->SetSize(.35f, .15f);
-					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(8, 0, -4, 1));
+					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(4.99f, 0, -1.58f, 1));
 					startEmit->SetParticle(start);
 					startEmit->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)startEmit)->y1 = 8;
@@ -352,7 +364,7 @@ namespace Epoch
 					start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
 					start->SetLife(500);
 					start->SetSize(.15f, .05f);
-					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(8, 0, -4, 1));
+					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(4.99f, 0, -1.58f, 1));
 					startEmit2->SetTexture("../Resources/BasicCircleP.png");
 					startEmit2->SetParticle(start);
 					((TeleportEffect*)startEmit2)->y1 = 1;

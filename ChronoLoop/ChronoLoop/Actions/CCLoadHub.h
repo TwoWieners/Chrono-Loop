@@ -91,40 +91,43 @@ namespace Epoch
 					Transform identity, transform;
 					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+					mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
+					mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
+					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-					rightRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
-					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-					MainMenuBT *bt = new MainMenuBT(eControllerType_Primary);
+					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+					TeleportAction* rightTele = new TeleportAction(eControllerType_Primary);
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					RightController->AddComponent(mc);
 					RightController->AddComponent(rightRaycaster);
-					RightController->AddComponent(bt);
+					RightController->AddComponent(rightTele);
 					RightController->AddComponent(rightConCol);
 
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("Controller2", identity);
-					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+					MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
+					mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
+					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
+					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
+					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-					leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
-					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-					MainMenuBT *bt2 = new MainMenuBT(eControllerType_Secondary);
+					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+					TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					LeftController->AddComponent(leftConCol);
 					LeftController->AddComponent(leftRaycaster);
+					LeftController->AddComponent(leftTele);
 					LeftController->AddComponent(mc2);
-					LeftController->AddComponent(bt2);
 
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", identity, nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("headset", transform);
 					HeadsetFollow* hfollow = new HeadsetFollow();
+					MainMenuBT* bt = new MainMenuBT();
+					headset->AddComponent(bt);
 					headset->AddComponent(hfollow);
-
-
 
 					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
-
-
 
 					Physics::Instance()->mObjects.push_back(RightController);
 					Physics::Instance()->mObjects.push_back(LeftController);
@@ -135,16 +138,15 @@ namespace Epoch
 					next->AddObject(RightController);
 
 					bool boop = true;
-					int floorPos = 0;
-					if (Settings::GetInstance().GetInt("mmLevel") == 1)
-						floorPos = -10;
+					int floorPos = Settings::GetInstance().GetInt("mmLevel") * -10;
 					auto& levelObjects = next->GetLevelObjects();
 					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 					{
 						std::string temp = ((BaseObject*)*it)->GetName();
-						if (temp == "mmChamber" || temp == "mmStartSign" || temp == "mmExitSign" || temp == "mmExitButton" ||
+						if (temp == "FloorChamber" || temp == "mmStartSign" || temp == "mmExitSign" || temp == "mmExitButton" ||
 							temp == "mmStartButton" || temp == "mmStartStand" || temp == "mmExitStand" ||
-							temp == "mmTutButton" || temp == "mmTutSign" || temp == "mmTutStand")
+							temp == "mmTutButton" || temp == "mmTutSign" || temp == "mmTutStand" || temp == "mmPrevStand"
+							|| temp == "mmPrevButton" || temp =="mmPrevSign")
 						{
 							Transform t;
 							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, (float)floorPos, 0));
@@ -404,8 +406,8 @@ namespace Epoch
 
 					if (Settings::GetInstance().GetBool("CompleteLevel4"))
 					{
-						((MeshComponent*)next->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
-						((MeshComponent*)next->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+						((MeshComponent*)next->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+						((MeshComponent*)next->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 						Particle* p2 = &Particle::Init();
 						p2->SetPos(vec3f(0, 0, 0));
 						p2->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
@@ -438,8 +440,8 @@ namespace Epoch
 					}
 					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 3)
 					{
-						((MeshComponent*)next->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
-						((MeshComponent*)next->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+						((MeshComponent*)next->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+						((MeshComponent*)next->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 						Particle* p2 = &Particle::Init();
 						p2->SetPos(vec3f(0, 0, 0));
 						p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
@@ -473,6 +475,8 @@ namespace Epoch
 
 					if (Settings::GetInstance().GetBool("CompleteLevel5"))
 					{
+						((MeshComponent*)next->FindObjectWithName("Test5")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+						((MeshComponent*)next->FindObjectWithName("Test5")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 						Particle* p1 = &Particle::Init();
 						p1->SetPos(vec3f(0, 0, 0));
 						p1->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
@@ -505,6 +509,8 @@ namespace Epoch
 					}
 					else if(Settings::GetInstance().GetInt("CurrentLevel") >= 4)
 					{
+						((MeshComponent*)next->FindObjectWithName("Test5")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+						((MeshComponent*)next->FindObjectWithName("Test5")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 						Particle* p1 = &Particle::Init();
 						p1->SetPos(vec3f(0, 0, 0));
 						p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));

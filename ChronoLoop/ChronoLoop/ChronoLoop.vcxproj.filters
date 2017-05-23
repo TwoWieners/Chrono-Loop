@@ -562,7 +562,7 @@
     <ClInclude Include="Actions\CCLevel5Button.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCPrevButton.h">
+    <ClInclude Include="Actions\CCLevel5Button2.h">
       <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Actions\CCLevel5Fields.h">
@@ -571,9 +571,26 @@
     <ClInclude Include="Actions\CCCloneIndicator.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCPrevButton.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
     <ClInclude Include="Actions\CCEnterLevel5.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCLevel5Button.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel5Button2.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel5DoorButton.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel5Fields.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCCloneIndicator.h" />
+    <ClInclude Include="Rendering\FrameQuery.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -855,6 +872,9 @@
     <ClCompile Include="BVH.cpp" />
     <ClCompile Include="Actions\BoxSnapToControllerAction.cpp">
       <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\FrameQuery.cpp">
+      <Filter>Rendering\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

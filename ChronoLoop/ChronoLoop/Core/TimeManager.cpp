@@ -116,6 +116,10 @@ namespace Epoch {
 	float TimeManager::GetTimeLineObjectInterpTime() {
 		return mTimeline->GetObjectInterpolationTime();
 	}
+	void TimeManager::SetClonesFinalFrame(unsigned short _id, unsigned int _frame)
+	{
+		mTimeline->SetCloneFrameCompletion(_id, _frame);
+	}
 	void TimeManager::SetTimelineObjectInterpTime(float _time) {
 		mTimeline->SetObjectInterpolationTime(_time);
 	}
@@ -640,7 +644,7 @@ namespace Epoch {
 			VRInputManager::GetInstance().GetPlayerPosition()[3].Set(start.x, start.y, start.z, start.w);
 		}
 		AudioEmitter* ambient = (AudioEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0);
-		AudioEmitter* resetLevelSFX = (AudioEmitter*)cLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0);
+		AudioEmitter* resetLevelSFX = (AudioEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 4);
 		if (ambient)
 		{
 			ambient->CallEvent(Emitter::EventType::eStop);
