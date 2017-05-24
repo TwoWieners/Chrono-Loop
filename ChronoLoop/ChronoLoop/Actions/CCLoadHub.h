@@ -51,7 +51,6 @@ namespace Epoch
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
 				next->BinaryLoadLevel("../Resources/MainMenu.elf");
-				Renderer::Instance()->ClearLights();
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
@@ -96,6 +95,7 @@ namespace Epoch
 					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+					rightRaycaster->SetVisible(false);
 					TeleportAction* rightTele = new TeleportAction(eControllerType_Primary);
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					RightController->AddComponent(mc);
@@ -111,6 +111,7 @@ namespace Epoch
 					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+					leftRaycaster->SetVisible(false);
 					TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					LeftController->AddComponent(leftConCol);
@@ -149,7 +150,7 @@ namespace Epoch
 							|| temp == "mmPrevButton" || temp =="mmPrevSign")
 						{
 							Transform t;
-							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, (float)floorPos, 0));
+							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateNewTranslation(0, (float)floorPos, 0));
 							((BaseObject*)*it)->SetTransform(t);
 
 							if (boop)
@@ -185,7 +186,7 @@ namespace Epoch
 						else if (floorPos == -10 && temp == "mmClosingPanel")
 						{
 							Transform t;
-							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(2, 0, 0));
+							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateNewTranslation(2, 0, 0));
 							((BaseObject*)*it)->SetTransform(t);
 						}
 
@@ -571,31 +572,6 @@ namespace Epoch
 					((TeleportEffect*)startEmit2)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
 					ParticleSystem::Instance()->AddEmitter(startEmit2);
 					startEmit2->FIRE();
-
-					Light* l1 = new Light();
-					l1->Type = 4;
-					l1->Color = vec3f(1, 1, 1);
-					l1->ConeDirection = vec3f(0, -1, 0);
-					l1->Position = vec3f(0, 4, 0);
-					l1->ConeRatio = .85f;
-
-					Light* l2 = new Light();
-					l2->Type = 4;
-					l2->Color = vec3f(0, 0, 1);
-					l2->ConeDirection = vec3f(0, -1, 0);
-					l2->Position = vec3f(3.972854f, 5, 0);
-					l2->ConeRatio = .9f;
-
-					Light* l3 = new Light();
-					l3->Type = 4;
-					l3->Color = vec3f(0, 1, 0);
-					l3->ConeDirection = vec3f(0, -1, 0);
-					l3->Position = vec3f(0, 5, -3.872531f);
-					l3->ConeRatio = .9f;
-
-					Renderer::Instance()->SetLight(l1, 0);
-					Renderer::Instance()->SetLight(l2, 1);
-					Renderer::Instance()->SetLight(l3, 2);
 
 					LevelManager::GetInstance().GetCurrentLevel()->GetStartPos() = vec4f(0, -10, 0, 1);
 					SystemLogger::Debug() << "Loading complete" << std::endl;

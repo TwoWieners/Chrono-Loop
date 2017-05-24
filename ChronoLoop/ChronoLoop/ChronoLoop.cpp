@@ -172,6 +172,7 @@ void Update() {
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 	rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+	rightRaycaster->SetVisible(false);
 	mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
 	mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
@@ -187,6 +188,7 @@ void Update() {
 	MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
 	MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 	leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+	leftRaycaster->SetVisible(false);
 	mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 	mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
@@ -365,7 +367,7 @@ void Update() {
 
 	//Test Animate Quad///////////////////////////////////////////////////////////////////
 	//Transform OneBack;
-	//OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -3));
+	//OneBack.SetMatrix(matrix4::CreateNewTranslation(0, 1, -3));
 	//BaseObject *Forcefield = Pool::Instance()->iGetObject()->Reset("ForceField Quad", OneBack);
 	//MeshComponent *forcefieldMesh = new MeshComponent("../Resources/AnimationPlane1x1.obj", 0.25f);
 	//forcefieldMesh->AddTexture("../Resources/ForcefieldHex gray.png", eTEX_DIFFUSE);
@@ -377,7 +379,7 @@ void Update() {
 
 	// Test Gamma Correction /////////////////////////////////////////////////////////////
 	/*Transform gammaform;
-	gammaform.SetMatrix(matrix4::CreateTranslation(0, 1, 0));
+	gammaform.SetMatrix(matrix4::CreateNewTranslation(0, 1, 0));
 	BaseObject *GammaObject = Pool::Instance()->iGetObject()->Reset("ForceField Quad", gammaform);
 	MeshComponent *GammaMesh = new MeshComponent("../Resources/AnimationPlane1x1.obj", 0.25f);
 	GammaMesh->AddTexture("../Resources/grey.png", eTEX_DIFFUSE);
@@ -388,36 +390,11 @@ void Update() {
 
 	/// Raycast debug cube
 	//Transform cubeScale;
-	//cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
+	//cubeScale.SetMatrix(matrix4::CreateNewScale(0.01f, 0.01f, 0.01f));
 	//BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
 	//MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
 	//mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	//mmCube->AddComponent(mmCubeMesh);
-	Light* l1 = new Light();
-	l1->Type = 4;
-	l1->Color = vec3f(1, 1, 1);
-	l1->ConeDirection = vec3f(0, -1, 0);
-	l1->Position = vec3f(0, 4, 0);
-	l1->ConeRatio = .85f;
-
-	Light* l2 = new Light();
-	l2->Type = 4;
-	l2->Color = vec3f(0, 0, 1);
-	l2->ConeDirection = vec3f(0, -1, 0);
-	l2->Position = vec3f(3.972854f, 5, 0);
-	l2->ConeRatio = .9f;
-
-	Light* l3 = new Light();
-	l3->Type = 4;
-	l3->Color = vec3f(0, 1, 0);
-	l3->ConeDirection = vec3f(0, -1, 0);
-	l3->Position = vec3f(0, 5, -3.872531f);
-	l3->ConeRatio = .9f;
-
-	Renderer::Instance()->SetLight(l1, 0);
-	Renderer::Instance()->SetLight(l2, 1);
-	Renderer::Instance()->SetLight(l3, 2);
-
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
 

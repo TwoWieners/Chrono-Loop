@@ -43,8 +43,8 @@ namespace Epoch
 			//exitend = exitCube->GetPos() + vec3f(0, 2.6f, 0);
 			blockstart = blockCube->GetTransform().GetMatrix();
 			exitstart = exitCube->GetTransform().GetMatrix();
-			blockend = blockCube->GetTransform().GetMatrix() * blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
-			exitend = exitCube->GetTransform().GetMatrix() * exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
+			blockend = blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
+			exitend = exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
 
 			mD1Wires = cLevel->FindAllObjectsByPattern("D1Wire");
 			mD2Wires = cLevel->FindAllObjectsByPattern("D2Wire");
@@ -202,7 +202,8 @@ namespace Epoch
 							if (temp)
 								temp->SetVisible(false);
 						}
-						for (unsigned int i = 0; i < mD2Wires.size(); i++) {
+						for (unsigned int i = 0; i < mD2Wires.size(); i++)
+						{
 							MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 							if (temp)
 								temp->SetVisible(true);
@@ -210,6 +211,19 @@ namespace Epoch
 							if (temp)
 								temp->SetVisible(false);
 						}
+
+							if (Block->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 1)
+							{
+								if (dynamic_cast<AudioEmitter*>(Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+									((AudioEmitter*)Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
+							}
+							if (Exit->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 1)
+							{
+								if (dynamic_cast<AudioEmitter*>(Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+									((AudioEmitter*)Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
+							}
+							mSoundOnce = false;
+						
 					}
 					if (blockCube->GetTransform().GetMatrix() != blockstart && exitCube->GetTransform().GetMatrix() != exitstart)
 					{
