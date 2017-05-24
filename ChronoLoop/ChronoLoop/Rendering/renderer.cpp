@@ -705,7 +705,7 @@ namespace Epoch {
 			if (GetAsyncKeyState(VK_CONTROL)) {
 				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewTranslation(0, -_moveSpd * _delta, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
-
+			
 			if (GetAsyncKeyState(VK_SPACE)) {
 				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewTranslation(0, _moveSpd * _delta, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
@@ -1482,6 +1482,7 @@ namespace Epoch {
 		mTransparentSet.ClearSet();
 		mTopmostSet.ClearSet();
 		mMotionSet.ClearSet();
+		mLightSet.ClearSet();
 	}
 
 	bool Renderer::BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, float _sigma, float _downsample) {
