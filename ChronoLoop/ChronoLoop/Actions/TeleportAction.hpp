@@ -528,6 +528,7 @@ namespace Epoch
 									float hitTime = FLT_MAX;
 									if (Physics::Instance()->RayToTriangle(
 										(tris + j)->Vertex[0],
+
 										(tris + j)->Vertex[1],
 										(tris + j)->Vertex[2],
 										(tris + j)->Normal, meshPos, fwd, hitTime))

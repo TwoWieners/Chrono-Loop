@@ -19,7 +19,11 @@ namespace Epoch
 		BoxSnapToControllerAction* mRightBS,* mLeftBS;
 		BaseObject* mStartField,* mExitField;
 		CCLevel5Fields *mStartFScript, *mExitFScript;
-		vec3f mStartMin, mStartMax, mExitMin, mExitMax, mHit;
+
+		Triangle* mStartFieldTris, *mExitFieldTris;
+		size_t mStartFieldTrisSize, mExitFieldTrisSize;
+		bool mStartDisappear = false, mEndDisappear = false;
+		float hitTime = 0.0f;
 
 		virtual void Start()
 		{
@@ -81,89 +85,118 @@ namespace Epoch
 					break;
 				}
 			}
-			mStartMin = ((CubeCollider*)mStartField->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mMin;
-			mStartMax = ((CubeCollider*)mStartField->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mMax;		
-			
-			mExitMin = ((CubeCollider*)mStartField->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mMin;
-			mExitMax = ((CubeCollider*)mStartField->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mMax;
+			mStartFieldTris = ((MeshComponent*)mStartField->GetComponentIndexed(eCOMPONENT_MESH, 0))->GetTriangles();
+			mExitFieldTris = ((MeshComponent*)mExitField->GetComponentIndexed(eCOMPONENT_MESH, 0))->GetTriangles();
+
+			mStartFieldTrisSize = ((MeshComponent*)mStartField->GetComponentIndexed(eCOMPONENT_MESH, 0))->GetTriangleCount();
+			mExitFieldTrisSize = ((MeshComponent*)mExitField->GetComponentIndexed(eCOMPONENT_MESH, 0))->GetTriangleCount();
 		}
 		virtual void Update()
 		{
-			if(VRInputManager::GetInstance().GetController(mControllerRole).GetPressUp(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && !Settings::GetInstance().GetBool("CantTeleport"))
+			if ((VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPressUp(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) ||
+				VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPressUp(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) &&
+				!Settings::GetInstance().GetBool("CantTeleport"))
 			{
 				if (mLeftBS)
 				{
 					if (mLeftBS->mHeld)
 					{
-						if (CheckLineBox(mStartMin, mStartMax, mBox->GetTransform().GetMatrix().Position, mLTeleportAction->GetEndPos().Position, mHit))
+						mLTeleportAction->Update();
+						for (unsigned int i = 0; i < mStartFieldTrisSize; i++)
 						{
-							mStartFScript->SetIsBoxShrinking(true);
+						matrix4 inverse = mStartField->GetWorld().Invert();
+						vec4f direction = mLTeleportAction->GetEndPos().Position - mBox->GetTransform().GetMatrix().Position;
+						//direction *= inverse;
+						direction = direction.Normalize();
+						vec3f startPosition = (mBox->GetTransform().GetMatrix()).Position;
+							hitTime = FLT_MAX;
+							if (Physics::Instance()->RayToTriangle(
+								(mStartFieldTris + i)->Vertex[0],
+								(mStartFieldTris + i)->Vertex[1],
+								(mStartFieldTris + i)->Vertex[2],
+								(mStartFieldTris + i)->Normal,
+								startPosition,
+								vec3f(direction),
+								hitTime))
+							{
+								if (hitTime < FLT_MAX)
+								{
+									SystemLogger::GetLog() << "Raycast hit from left controller" << std::endl;
+
+									mStartFScript->SetIsBoxShrinking(true);
+									return;
+								}
+							}
 						}
-						else if (CheckLineBox(mExitMin, mExitMax, mBox->GetTransform().GetMatrix().Position, mLTeleportAction->GetEndPos().Position, mHit))
+						for (unsigned int i = 0; i < mExitFieldTrisSize; i++)
 						{
-							mExitFScript->SetIsBoxShrinking(true);
+							hitTime = FLT_MAX;
+							if (Physics::Instance()->RayToTriangle(
+								(mExitFieldTris + i)->Vertex[0],
+								(mExitFieldTris + i)->Vertex[1],
+								(mExitFieldTris + i)->Vertex[2],
+								(mExitFieldTris + i)->Normal,
+								vec3f(mBox->GetTransform().GetMatrix().Position),
+								vec3f(mLTeleportAction->GetEndPos().Position - mBox->GetTransform().GetMatrix().Position),
+								hitTime))
+							{
+								if (hitTime < FLT_MAX)
+								{
+									mExitFScript->SetIsBoxShrinking(true);
+									return;
+								}
+							}
 						}
+
 					}
 				}
 				if (mRightBS)
 				{
 					if (mRightBS->mHeld)
 					{
-						if (CheckLineBox(mStartMin, mStartMax, mBox->GetTransform().GetMatrix().Position, mRTeleportAction->GetEndPos().Position, mHit))
+						for (unsigned int i = 0; i < mStartFieldTrisSize; i++)
 						{
-							mStartFScript->SetIsBoxShrinking(true);
+							hitTime = FLT_MAX;
+							Physics::Instance()->RayToTriangle(
+								(mStartFieldTris + i)->Vertex[0],
+								(mStartFieldTris + i)->Vertex[1],
+								(mStartFieldTris + i)->Vertex[2],
+								(mStartFieldTris + i)->Normal,
+								vec3f(mBox->GetTransform().GetMatrix().Position),
+								vec3f(mRTeleportAction->GetEndPos().Position - mBox->GetTransform().GetMatrix().Position),
+								hitTime);
+							
+							if (hitTime < FLT_MAX)
+							{
+								SystemLogger::GetLog() << "Raycast hit from right controller" << std::endl;
 
+								mStartFScript->SetIsBoxShrinking(true);
+								return;
+							}
+							
 						}
-						else if (CheckLineBox(mExitMin, mExitMax, mBox->GetTransform().GetMatrix().Position, mRTeleportAction->GetEndPos().Position, mHit))
+						for (unsigned int i = 0; i < mExitFieldTrisSize; i++)
 						{
-							mExitFScript->SetIsBoxShrinking(true);
+							hitTime = FLT_MAX;
+							Physics::Instance()->RayToTriangle(
+								(mExitFieldTris + i)->Vertex[0],
+								(mExitFieldTris + i)->Vertex[1],
+								(mExitFieldTris + i)->Vertex[2],
+								(mExitFieldTris + i)->Normal,
+								vec3f(mBox->GetTransform().GetMatrix().Position),
+								vec3f(mRTeleportAction->GetEndPos().Position - mBox->GetTransform().GetMatrix().Position),
+								hitTime);
+							
+							if (hitTime < FLT_MAX)
+							{
+								mExitFScript->SetIsBoxShrinking(true);
+								return;
+							}
 						}
 					}
 				}
 			}
 		}
-		int inline GetIntersection(float fDst1, float fDst2, vec3f P1, vec3f P2, vec3f &Hit)
-		{
-			if ((fDst1 * fDst2) >= 0.0f) return 0;
-			if (fDst1 == fDst2) return 0;
-			Hit = P1 + (P2 - P1) * (-fDst1 / (fDst2 - fDst1));
-			return 1;
-		}
 
-		int inline InBox(vec3f Hit, vec3f B1, vec3f B2, const int Axis)
-		{
-			if (Axis == 1 && Hit.z > B1.z && Hit.z < B2.z && Hit.y > B1.y && Hit.y < B2.y) return 1;
-			if (Axis == 2 && Hit.z > B1.z && Hit.z < B2.z && Hit.x > B1.x && Hit.x < B2.x) return 1;
-			if (Axis == 3 && Hit.x > B1.x && Hit.x < B2.x && Hit.y > B1.y && Hit.y < B2.y) return 1;
-			return 0;
-		}
-
-		// returns true if line (L1, L2) intersects with the box (B1, B2)
-		// returns intersection point in Hit
-		bool CheckLineBox(vec3f B1, vec3f B2, vec3f L1, vec3f L2, vec3f &Hit)
-		{
-			if (L2.x < B1.x && L1.x < B1.x) return false;
-			if (L2.x > B2.x && L1.x > B2.x) return false;
-			if (L2.y < B1.y && L1.y < B1.y) return false;
-			if (L2.y > B2.y && L1.y > B2.y) return false;
-			if (L2.z < B1.z && L1.z < B1.z) return false;
-			if (L2.z > B2.z && L1.z > B2.z) return false;
-			if (L1.x > B1.x && L1.x < B2.x &&
-				L1.y > B1.y && L1.y < B2.y &&
-				L1.z > B1.z && L1.z < B2.z)
-			{
-				Hit = L1;
-				return true;
-			}
-			if ((GetIntersection(L1.x - B1.x, L2.x - B1.x, L1, L2, Hit) && InBox(Hit, B1, B2, 1))
-				|| (GetIntersection(L1.y - B1.y, L2.y - B1.y, L1, L2, Hit) && InBox(Hit, B1, B2, 2))
-				|| (GetIntersection(L1.z - B1.z, L2.z - B1.z, L1, L2, Hit) && InBox(Hit, B1, B2, 3))
-				|| (GetIntersection(L1.x - B2.x, L2.x - B2.x, L1, L2, Hit) && InBox(Hit, B1, B2, 1))
-				|| (GetIntersection(L1.y - B2.y, L2.y - B2.y, L1, L2, Hit) && InBox(Hit, B1, B2, 2))
-				|| (GetIntersection(L1.z - B2.z, L2.z - B2.z, L1, L2, Hit) && InBox(Hit, B1, B2, 3)))
-				return true;
-
-			return false;
-		}
 	};
 }
