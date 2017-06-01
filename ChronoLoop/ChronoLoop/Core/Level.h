@@ -60,8 +60,7 @@ namespace Epoch
 		//**FUNCTIONS**//
 		void SetupObjects();
 		void CallStart();
-		void LoadLevel(std::string _file);
-		void Level::BinaryLoadLevel(std::string _file);
+		void BinaryLoadLevel(std::string _file);
 		void Update();
 
 		//**CONSOLE COMMAND FUNCS**//

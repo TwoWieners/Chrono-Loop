@@ -1,6 +1,7 @@
 #pragma once
 #include "Level.h"
 #include <mutex>
+#include <vector>
 
 namespace Epoch {
 
@@ -27,6 +28,9 @@ namespace Epoch {
 			Error
 		};
 
+		//Level Container, Ordered
+		std::vector<std::string> LevelOrder;
+		void LoadLevelOrder(std::string _file);
 
 		//void SetCurrentLevel(Level* _level);
 		void RequestLevelChange(Level* _next);

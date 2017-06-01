@@ -153,6 +153,9 @@ void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
+	LevelManager::GetInstance().LoadLevelOrder("../Resources/LevelOrder.xml");
+
+
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
 	//_CrtSetBreakAlloc(4390);

@@ -55,7 +55,8 @@ namespace Epoch
 			{
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
-				next->BinaryLoadLevel("../Resources/Level1.elf");
+				//next->BinaryLoadLevel("../Resources/Level1.elf");
+				next->BinaryLoadLevel(LevelManager::GetInstance().LevelOrder[1]);
 
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?

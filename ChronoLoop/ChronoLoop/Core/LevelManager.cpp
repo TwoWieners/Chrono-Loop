@@ -1,6 +1,8 @@
 #include "LevelManager.h"
 #include <thread>
 #include "../Common/Settings.h"
+#include "../tinyxml/tinyxml.h"
+#include "../tinyxml/tinystr.h"
 
 namespace Epoch {
 
@@ -125,6 +127,42 @@ namespace Epoch {
 			mRequested = nullptr;
 		}
 		mCurrentLevel->Update();
+	}
+
+	void LM::LoadLevelOrder(std::string _file)
+	{
+		TiXmlDocument XMLdoc(_file.c_str());
+		bool loadOkay = XMLdoc.LoadFile();
+		if (loadOkay)
+		{
+			//SystemLogger::GetLog() << _file.c_str() << " loaded" << std::endl;
+			TiXmlElement *pRoot, *pObject, *pData;
+			pRoot = XMLdoc.FirstChildElement("LevelOrder");
+			if (pRoot)
+			{
+				// Get Level Settings
+				pObject = pRoot->FirstChildElement();
+				std::string nodeType;
+				while (pObject)
+				{
+					if (pObject->Type() == TiXmlNode::NodeType::TINYXML_ELEMENT)
+					{
+						pData = (TiXmlElement*)pObject->FirstChild();
+						nodeType = pData->Value();
+
+						std::string path = "../Resources/";
+						path.append(nodeType.c_str());
+						LevelManager::GetInstance().LevelOrder.push_back(path);
+						SystemLogger::GetLog() << path << " loaded" << std::endl;
+					}
+					else
+					{
+						SystemLogger::Warn() << "Attempted to load invalid type in LevelOrder.xml!" << std::endl;
+					}
+					pObject = pObject->NextSiblingElement("Level");
+				}
+			}
+		}
 	}
 
 } // Epoch Namespace
